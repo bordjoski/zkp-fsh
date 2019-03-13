@@ -7,7 +7,7 @@ import forge from 'node-forge';
 import FSBase from './fsbase';
 
 /**
- * Helper methods enabling user to prove identity without 
+ * Helper methods enabling user to prove identity without
  * compromising the password and without shared or public keys.
  * Client class is responsible for:
  * 1. calculation of registration value
@@ -40,7 +40,7 @@ class Client extends FSBase {
    */
   solveChallange(password, valueOfVerifier) {
     const x = this.calculateSecret(password);
-    return this.random - valueOfVerifier * x;
+    return this.random - (valueOfVerifier * x);
   }
 
   /**
@@ -49,8 +49,8 @@ class Client extends FSBase {
    * @private
    */
   calculateSecret(password) {
-    const md = forge.md.md5.create();
-    md.update(password);
+    const md = forge.md.sha384.create();
+    md.update(Buffer.from(password).toString('base64'));
     const r = bigInt(parseInt(md.digest().toHex().substr(0, 8), 16)).mod(this.prime);
     return r.valueOf();
   }
