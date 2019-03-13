@@ -26,12 +26,12 @@ In the case password based authentication system is required, it is wise to cons
 ### Example Usage
 
 #### Calculate registration value
-`import { Client, Utils, Verifier } from 'zkp-fsh';`\
+`const zkpfsh = require('zkp-fsh');`\
 `// Client and Verifier must agree on prime and generator:`\
-`const prime = Utils.getPrime(100000, 1000000);`\
-`const generator = Utils.getGenerator(prime);`\
+`const prime = zkpfsh.Utils.getPrime(100000, 1000000);`\
+`const generator = zkpfsh.Utils.getGenerator(prime);`\
 `// Generate registration value:`\
-`const client = new Client(prime,generator);`\
+`const client = new zkpfsh.Client(prime,generator);`\
 `const registrationValue = client.getRegistrationValue('client password');`
 
 #### Calculate sign in value
@@ -41,8 +41,8 @@ In the case password based authentication system is required, it is wise to cons
 `// calculate result based on picked number by verifier`\
 `const solvedChallange = client.solveChallange(clientPassword, verifier.random);`
 
-#### Proove that Client still knows the password
-`const verifier = new Verifier(prime,generator);`\
+#### Verify that Client still knows the password
+`const verifier = new zkpfsh.Verifier(prime,generator);`\
 `const success = verifier.verifyChallange(solvedChallangeByClient, registrationValue, signInValue);`
 
 ### References
