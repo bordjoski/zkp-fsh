@@ -6,6 +6,8 @@
  * Fiat-Shamir heruistic
  * @see https://link.springer.com/content/pdf/10.1007/3-540-47721-7_12.pdf
  */
+
+import 'babel-polyfill';
 import Verifier from './verifier';
 import Client from './client';
 import Utils from './utils';
