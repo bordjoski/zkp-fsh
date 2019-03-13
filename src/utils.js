@@ -40,12 +40,12 @@ class Utils {
    * @param {Number} prime Agreed prime number
    */
   static getGenerator(prime) {
-    for (let i = 1; i <= prime; i++) {
+    for (let i = 1; i <= prime; i += 1) {
       let exp = 1;
       let next = i % prime;
       while (next !== 1) {
         next = (next * i) % prime;
-        exp++;
+        exp += 1;
 
         if (exp === prime - 1) {
           return i;
@@ -73,27 +73,28 @@ class Utils {
     const n = Math.floor(max * 0.5);
 
     const a = Array(n);
-    const t = (Math.sqrt(4 + 8 * n) - 2) * 0.25;
+    const t = (Math.sqrt(4 + (8 * n)) - 2) * 0.25;
     const r = [];
 
     let u = 0;
     let i = 1;
 
-    for (i = 1; i < (n - 1) / 3; i++) {
-      a[1 + 3 * i] = true;
+    for (i = 1; i < (n - 1) / 3; i += 1) {
+      a[1 + (3 * i)] = true;
     }
 
-    for (i = 2; i <= t; i++) {
-      u = (n - i) / (1 + 2 * i);
-      if (i % 3 - 1) {
-        for (let j = i; j < u; j++) {
-          a[i + j + 2 * i * j] = true;
+    for (i = 2; i <= t; i += 1) {
+      u = (n - i) / (1 + (2 * i));
+      if ((i % 3) - 1) {
+        for (let j = i; j < u; j += 1) {
+          a[i + j + (2 * i * j)] = true;
         }
       }
     }
 
-    for (i = min; i < n; i++) {
-      !a[i] && r.push(i * 2 + 1);
+    for (i = min; i < n; i += 1) {
+      // eslint-disable-next-line no-unused-expressions
+      !a[i] && r.push((i * 2) + 1);
     }
 
     return r;
@@ -107,7 +108,7 @@ class Utils {
   static inRange(min, max) {
     const minx = Math.ceil(min);
     const maxx = Math.floor(max);
-    return Math.floor(Math.random() * (maxx - minx + 1)) + minx;
+    return Math.floor(Math.random() * ((maxx - minx) + 1)) + minx;
   }
 
   /**

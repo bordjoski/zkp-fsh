@@ -24,8 +24,10 @@ class Verifier extends FSBase {
 
     // (g**challangeResult)
     const m = (challangeResult < 0)
-      ? this.inverseOf(bigInt(this.generator).modPow(-challangeResult, this.prime).valueOf(), this.prime)
-      : bigInt(this.generator).modPow(challangeResult, this.prime).valueOf();
+      ? this.inverseOf(bigInt(this.generator)
+        .modPow(-challangeResult, this.prime).valueOf(), this.prime)
+      : bigInt(this.generator)
+        .modPow(challangeResult, this.prime).valueOf();
 
     const r = bigInt(m * n).mod(this.prime).valueOf();
 
@@ -39,10 +41,12 @@ class Verifier extends FSBase {
    * @param {Number} p Prime number
    * @private
    */
+  // eslint-disable-next-line class-methods-use-this
   inverseOf(n, p) {
     const r = math.xgcd(n, p);
     // In case r._data[1] is negative, add extra p
     // since multiplicative inverse of A in range p lies in the range [0, p-1]
+    // eslint-disable-next-line no-underscore-dangle
     const x = r._data[1] < 0 ? r._data[1] + p : r._data[1];
     return bigInt(x).mod(p).valueOf();
   }
