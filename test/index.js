@@ -12,7 +12,7 @@ let prime;
 
 describe('Library test', () => {
   it('Should generate large prime', async () => {
-    prime = await Utils.getPrime(1024);
+    prime = await Utils.getPrime();
     assert(prime, `${prime} invalid`);
   });
 
