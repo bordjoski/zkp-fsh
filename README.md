@@ -38,7 +38,7 @@ In the case password based authentication system is required, it is wise to cons
 `const registrationValue = client.getRegistrationValue('password');`
 
 #### Calculate sign in value
-`const signInValue = client.getSignInValue();`\
+`const signInValue = client.getSignInValue();`
 
 #### Proove that Client still knows the password
 `// calculate result based on random number picked by verifier`\
