@@ -1,6 +1,6 @@
 {
-  "name": "zkp-fsh",
-  "version": "1.0.2",
+  "name": "zkp-fish",
+  "version": "0.0.1",
   "description": "Enables user to prove identity without compromising the password and without shared or public keys. Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heruistic",
   "main": "./lib/index.js",
   "scripts": {
@@ -34,9 +34,9 @@
     "babel-polyfill": "6.26.0"
   },
   "bugs": {
-    "url": "https://github.com/bordjoski/zkp-fsh/issues"
+    "url": "https://github.com/bordjoski/zkp-fish/issues"
   },
-  "homepage": "https://github.com/bordjoski/zkp-fsh#readme",
+  "homepage": "https://github.com/bordjoski/zkp-fish#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.1",
