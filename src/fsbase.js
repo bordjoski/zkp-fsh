@@ -2,6 +2,7 @@
  * @author Mirko Bordjoski <mirko.bordjoski@gmail.com>, 2019
  */
 
+import bigInt from 'big-integer';
 import Utils from './utils';
 
 /**
@@ -13,12 +14,18 @@ class FSBase {
    * @param {Number} g Generator
    * @param {Number} r Random number
    */
-  constructor(p, g, r = 0) {
-    this.prime = p;
-    this.generator = g;
+  constructor(p, g = 2, r = 0) {
+    this.prime = bigInt(p.toString());
+    this.generator = bigInt(g);
     this.random = r === 0
-      ? Utils.getRandomValue(this.prime)
-      : r;
+      ? this.getRandom()
+      : bigInt(r);
+  }
+
+  getRandom() {
+    return this.random
+      ? this.random
+      : bigInt(Utils.getRandomValue(this.prime));
   }
 }
 

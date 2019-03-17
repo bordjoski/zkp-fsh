@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /**
  * @author Mirko Bordjoski <mirko.bordjoski@gmail.com>, 2019
  */
@@ -19,19 +20,21 @@ class Verifier extends FSBase {
   verifyChallange(challangeResult, registrationValue, signInValue) {
     // (g**challangeResult) * (registrationValue**valueOfVerifier) = signInValue
 
+    const bigChallangeResult = bigInt(challangeResult);
     // (registrationValue**valueOfVerifier)
     const n = bigInt(registrationValue).modPow(this.random, this.prime);
 
     // (g**challangeResult)
-    const m = (challangeResult < 0)
-      ? this.inverseOf(bigInt(this.generator)
-        .modPow(-challangeResult, this.prime).valueOf(), this.prime)
-      : bigInt(this.generator)
-        .modPow(challangeResult, this.prime).valueOf();
+    const m = bigChallangeResult.isNegative()
+      ? this.inverseOf(
+        this.generator.modPow(bigChallangeResult.times(bigInt(-1)), this.prime),
+        this.prime
+      )
+      : this.generator.modPow(bigChallangeResult, this.prime);
 
-    const r = bigInt(m * n).mod(this.prime).valueOf();
-
-    return signInValue === r;
+    const mn = m.times(n);
+    const r = mn.mod(this.prime);
+    return bigInt(signInValue).eq(r);
   }
 
   /**
@@ -43,12 +46,23 @@ class Verifier extends FSBase {
    */
   // eslint-disable-next-line class-methods-use-this
   inverseOf(n, p) {
-    const r = math.xgcd(n, p);
+    const r = math.xgcd(
+      math.bignumber(n.toString()),
+      math.bignumber(p.toString())
+    );
+    const x = bigInt(r._data[1].toString());
     // In case r._data[1] is negative, add extra p
     // since multiplicative inverse of A in range p lies in the range [0, p-1]
-    // eslint-disable-next-line no-underscore-dangle
-    const x = r._data[1] < 0 ? r._data[1] + p : r._data[1];
-    return bigInt(x).mod(p).valueOf();
+    const xp = x.isNegative()
+      ? x.plus(p)
+      : x;
+
+    return xp.mod(p);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getRandom() {
+    return bigInt(1000000 + Math.round(Math.random() * 1000000000));
   }
 }
 

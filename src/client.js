@@ -21,26 +21,24 @@ class Client extends FSBase {
    */
   getRegistrationValue(password) {
     const x = this.calculateSecret(password);
-    return bigInt(this.generator).modPow(x, this.prime).valueOf();
+    return this.generator.modPow(x, this.prime);
   }
 
   /**
    * Get initial value for sign in process.
    */
   getSignInValue() {
-    return bigInt(this.generator).modPow(this.random, this.prime).valueOf();
+    return this.generator.modPow(this.random, this.prime);
   }
 
   /**
    * Solves a challange given by verifier.
    * @param {String} password Choosen password
-   * @param {Number} prime Agreed prime number
-   * @param {Number} valueOfInitiator Random number choosen by initiator of sign in process
-   * @param {Number} valueOfVerifier Random number given by verifier
+   * @param {Number} challange Random number given by verifier
    */
-  solveChallange(password, valueOfVerifier) {
+  solveChallange(password, challange) {
     const x = this.calculateSecret(password);
-    return this.random - (valueOfVerifier * x);
+    return this.random.minus(bigInt(challange).multiply(x));
   }
 
   /**
@@ -51,8 +49,8 @@ class Client extends FSBase {
   calculateSecret(password) {
     const md = forge.md.sha384.create();
     md.update(Buffer.from(password).toString('base64'));
-    const r = bigInt(parseInt(md.digest().toHex().substr(0, 8), 16)).mod(this.prime);
-    return r.valueOf();
+    return bigInt(parseInt(md.digest().toHex().substr(0, 8), 16))
+      .mod(this.prime);
   }
 }
 
