@@ -23,7 +23,7 @@ In the case password based authentication system is required, it is wise to cons
 
 ### Installation
 
-`npm install zkp-fsh --save`
+`npm install zkp-fish --save`
 
 ### Example Usage
 
