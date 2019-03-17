@@ -60,9 +60,19 @@ class Verifier extends FSBase {
     return xp.mod(p);
   }
 
+  /**
+   * @override
+   */
   // eslint-disable-next-line class-methods-use-this
   getRandom() {
-    return bigInt(1000000 + Math.round(Math.random() * 1000000000));
+    return this.random || bigInt(1000000 + Math.round(Math.random() * 1000000000));
+  }
+
+  /**
+   * Get a challange for client.
+   */
+  getChallange() {
+    return this.random;
   }
 }
 

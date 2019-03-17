@@ -29,7 +29,7 @@ describe('Library test', () => {
   });
 
   it('Should solve a challange given by verifier', () => {
-    solvedChallange = client.solveChallange(clientPassword, verifier.random);
+    solvedChallange = client.solveChallange(clientPassword, verifier.getChallange());
     assert(!isNaN(solvedChallange), 'Sign in value should not be NaN');
   });
 
@@ -39,7 +39,7 @@ describe('Library test', () => {
   });
 
   it('Verification should fail in the case of wrong password', () => {
-    solvedChallange = client.solveChallange('wrong-password', verifier.random);
+    solvedChallange = client.solveChallange('wrong-password', verifier.getChallange());
     const success = verifier.verifyChallange(solvedChallange, registrationValue, signInValue);
     assert(!success, 'Should fail');
   });
