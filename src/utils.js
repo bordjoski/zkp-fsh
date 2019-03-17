@@ -9,13 +9,13 @@ import forge from 'node-forge';
  */
 class Utils {
   /**
-   * Returns random large prime number both initiator
+   * Returns random 1024-bit large prime number both initiator
    * and verifier will agree to use.
    */
-  static async getPrime(bits = 1024) {
+  static async getPrime() {
     return new Promise((resolve, reject) => {
       // generate a random prime on the main JS thread
-      forge.prime.generateProbablePrime(bits, (err, num) => {
+      forge.prime.generateProbablePrime(1024, (err, num) => {
         if (err) {
           reject(err);
         }
