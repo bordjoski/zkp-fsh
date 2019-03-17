@@ -29,7 +29,7 @@ In the case password based authentication system is required, it is wise to cons
 
 `const zkpfsh = require('zkp-fsh');`\
 `// Client and Verifier must agree on prime and generator:`\
-`const prime = zkpfsh.Utils.getPrime(1024);`\
+`const prime = await zkpfsh.Utils.getPrime(1024);`\
 `const generator = 2;`\
 `// Generate registration value:`\
 `const client = new zkpfsh.Client(prime, generator);`\
