@@ -1,7 +1,9 @@
-# zkp-fsh
+# zkp-fish
+
+#### The library is made as a proof of concept only and it was not reviewed by anyone. Not ment to be used in production enviroment.
+
 Helper methods and proof of concept library enabling user to prove identity without compromising the password and without shared or public keys.\
-Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heruistic.\
-Designed to work in nodejs enviroment
+Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heruistic.
 
 ### Password based authentication system
 In the case password based authentication system is required, it is wise to consider applying a method which would prevent exposing the passwords over the network and which does not require storing hashed passwords in the storage. Method used in the library is know as Fiat-Shamir heruistic
@@ -34,12 +36,6 @@ In the case password based authentication system is required, it is wise to cons
 `// Generate registration value:`\
 `const client = new zkpfsh.Client(prime, generator);`\
 `const registrationValue = client.getRegistrationValue('password');`
-
-Output of registration value looks something like this:
-```
-81918083630528027677520801024673501504780377281353811262781583693290561188427768639436327540450677145030881356803139751493215103228371635399570220034892957774900637820715200392893486722364960314636330324326270540056429637516435175738920183492178741298866649519579841232311208766933074173045033491571187135198n
-```
-Now, output value should be saved by verifier.
 
 #### Calculate sign in value
 `const signInValue = client.getSignInValue();`\
