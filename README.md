@@ -29,7 +29,7 @@ In the case password based authentication system is required, it is wise to cons
 
 #### Calculate registration value
 
-`const zkpfsh = require('zkp-fsh');`\
+`const zkpfsh = require('zkp-fish');`\
 `// Client and Verifier must agree on prime and generator:`\
 `const prime = await zkpfsh.Utils.getPrime(1024);`\
 `const generator = 2;`\
