@@ -14,16 +14,34 @@ class FSBase {
    * @param {Number} g Generator
    * @param {Number} r Random number
    */
-  constructor(p, g = 2, r = 0) {
+  constructor(p, g = 2) {
     this.prime = bigInt(p.toString());
     this.generator = bigInt(g);
-    this.random = r === 0
-      ? this.getRandom()
-      : bigInt(r);
+    this.random = this.generateRandom();
   }
 
-  getRandom() {
-    return this.random || bigInt(Utils.getRandomValue(this.prime));
+  /**
+   * @private
+   */
+  generateRandom() {
+    const pBits = Buffer.byteLength(this.prime.toString(16), 'utf8');
+    let m = Math.floor(pBits / 256);
+    let s = '';
+    while (m > 0) {
+      s += this.getPartOf(256).toString().split('n').join('');
+      m -= 1;
+    }
+    return bigInt(s);
+  }
+
+  /**
+   * @private
+   */
+  getPartOf(bits) {
+    return bigInt(Utils.getRandomValue(this.prime.toString().substr(
+      0,
+      Math.floor(this.prime.toString().length / (Math.floor(this.prime.toString().length / bits)))
+    )));
   }
 }
 

@@ -65,8 +65,15 @@ class Verifier extends FSBase {
    * @override
    */
   // eslint-disable-next-line class-methods-use-this
-  getRandom() {
-    return this.random || Utils.getRandomValue(Number.MAX_SAFE_INTEGER);
+  generateRandom() {
+    const pBits = Buffer.byteLength(this.prime.toString(16), 'utf8');
+    let m = Math.floor(pBits / 256 / 2) + 1;
+    let s = '';
+    while (m > 0) {
+      s += this.getPartOf(128).toString().split('n').join('');
+      m -= 1;
+    }
+    return bigInt(s);
   }
 
   /**

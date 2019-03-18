@@ -8,14 +8,22 @@ import forge from 'node-forge';
  * Utils class provides helper methods for calculating prime numbers
  */
 class Utils {
+  static async generateAgreement() {
+    const p = await Utils.getPrime();
+    const g = 2;
+    return {
+      prime: p,
+      generator: g
+    };
+  }
   /**
-   * Returns random 1024-bit large prime number both initiator
+   * Returns random large prime number both initiator
    * and verifier will agree to use.
    */
-  static async getPrime() {
+  static async getPrime(bits = 1024) {
     return new Promise((resolve, reject) => {
       // generate a random prime on the main JS thread
-      forge.prime.generateProbablePrime(1024, (err, num) => {
+      forge.prime.generateProbablePrime(bits, (err, num) => {
         if (err) {
           reject(err);
         }
