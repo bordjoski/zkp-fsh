@@ -65,7 +65,7 @@ class Verifier extends FSBase {
    */
   // eslint-disable-next-line class-methods-use-this
   getRandom() {
-    const minV = 1000001;
+    const minV = 1;
     return this.random
       || bigInt(Math.floor(minV + (Math.random() * (Number.MAX_SAFE_INTEGER - minV))));
   }
