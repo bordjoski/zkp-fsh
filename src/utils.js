@@ -29,7 +29,7 @@ class Utils {
    * @param {Number} max Agreed prime number
    */
   static getRandomValue(max) {
-    return Utils.inRange(1 + (max * 0.1), max);
+    return Utils.inRange(1, max);
   }
 
   /**
