@@ -2,7 +2,7 @@
 
 #### The library is made as a proof of concept only and it was not reviewed by anyone. Not ment to be used in production enviroment.
 
-Helper methods and proof of concept library enabling user to prove identity without compromising the password and without shared or public keys.\
+Helper methods and proof of concept library enabling user to authenticate without compromising the password and without shared or public keys.\
 Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heruistic.
 
 ### Password based authentication system
