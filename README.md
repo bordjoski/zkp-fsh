@@ -41,8 +41,8 @@ In the case password based authentication system is required, it is wise to cons
 `const signInValue = client.getSignInValue();`
 
 #### Proove that Client still knows the password
-`// calculate result based on random number picked by verifier`\
-`const solvedChallange = client.solveChallange(clientPassword, verifier.random);`
+`// Solve a challange given by Verifier`\
+`const solvedChallange = client.solveChallange('password', verifier.getChallange());`
 
 #### Verify that Client still knows the password
 `const verifier = new zkpfsh.Verifier(prime, generator);`\
