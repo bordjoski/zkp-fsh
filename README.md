@@ -31,18 +31,18 @@ In the case password based authentication system is required, it is wise to cons
 
 `const zkpfsh = require('zkp-fish');`\
 `// Client and Verifier must agree on prime and generator:`\
-`const prime = await zkpfsh.Utils.getPrime(1024);`\
+`const prime = await zkpfsh.Utils.getPrime();`\
 `const generator = 2;`\
 `// Generate registration value:`\
 `const client = new zkpfsh.Client(prime, generator);`\
 `const registrationValue = client.getRegistrationValue('password');`
 
 #### Calculate sign in value
-`const signInValue = client.getSignInValue();`\
+`const signInValue = client.getSignInValue();`
 
 #### Proove that Client still knows the password
-`// calculate result based on random number picked by verifier`\
-`const solvedChallange = client.solveChallange(clientPassword, verifier.random);`
+`// Solve a challange given by Verifier`\
+`const solvedChallange = client.solveChallange('password', verifier.getChallange());`
 
 #### Verify that Client still knows the password
 `const verifier = new zkpfsh.Verifier(prime, generator);`\

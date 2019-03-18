@@ -23,9 +23,7 @@ class FSBase {
   }
 
   getRandom() {
-    return this.random
-      ? this.random
-      : bigInt(Utils.getRandomValue(this.prime));
+    return this.random || bigInt(Utils.getRandomValue(this.prime));
   }
 }
 

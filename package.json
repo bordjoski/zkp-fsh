@@ -1,6 +1,6 @@
 {
   "name": "zkp-fish",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Enables user to prove identity without compromising the password and without shared or public keys. Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heruistic",
   "main": "./lib/index.js",
   "scripts": {
