@@ -9,6 +9,12 @@ import Utils from './utils';
  * FSBase class is base class for Verifier and Client
  */
 class FSBase {
+  static get ACCEPTABLE_METHODS() {
+    return {
+      md5: true,
+      sha384: true
+    };
+  }
   /**
    * @param {Number} p Prime number
    * @param {Number} g Generator
@@ -24,11 +30,20 @@ class FSBase {
    * @private
    */
   generateRandom() {
-    const pBits = Buffer.byteLength(this.prime.toString(16), 'utf8');
-    let m = Math.floor(pBits / 256);
+    return this.getDirt(256);
+  }
+
+  // -----------temporary fix:
+  /**
+   * Dirty fix made to be able to test larger primes and randoms.
+   * Speed out of focus
+   * Randoms should be generated with random bytes method from crypto or forge PRNG
+   */
+  getDirt(bits, n = 1) {
+    let m = 33;
     let s = '';
     while (m > 0) {
-      s += this.getPartOf(256).toString().split('n').join('');
+      s += this.getPartOf(Math.floor(bits / n)).toString().split('n').join('');
       m -= 1;
     }
     return bigInt(s);
@@ -43,6 +58,7 @@ class FSBase {
       Math.floor(this.prime.toString().length / (Math.floor(this.prime.toString().length / bits)))
     )));
   }
+  // ----------- end of temporary fix
 }
 
 export default FSBase;

@@ -6,7 +6,6 @@
 import bigInt from 'big-integer';
 import math from 'mathjs';
 import FSBase from './fsbase';
-import Utils from './utils';
 
 /**
  * Verifier class exposes a method enabling verifier to verify solved challange
@@ -66,14 +65,7 @@ class Verifier extends FSBase {
    */
   // eslint-disable-next-line class-methods-use-this
   generateRandom() {
-    const pBits = Buffer.byteLength(this.prime.toString(16), 'utf8');
-    let m = Math.floor(pBits / 256 / 2) + 1;
-    let s = '';
-    while (m > 0) {
-      s += this.getPartOf(128).toString().split('n').join('');
-      m -= 1;
-    }
-    return bigInt(s);
+    return this.getDirt(256, 2);
   }
 
   /**
