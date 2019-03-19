@@ -3,10 +3,10 @@
 #### The library is made as a proof of concept only and it was not reviewed by anyone. Not ment to be used in production enviroment.
 
 Helper methods and proof of concept library enabling user to authenticate without compromising the password and without shared or public keys.\
-Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heruistic.
+Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heuristic.
 
 ### Password based authentication system
-In the case password based authentication system is required, it is wise to consider applying a method which would prevent exposing the passwords over the network and which does not require storing hashed passwords in the storage. Method used in the library is know as Fiat-Shamir heruistic
+In the case password based authentication system is required, it is wise to consider applying a method which would prevent exposing the passwords over the network and which does not require storing hashed passwords in the storage. Method used in the library is know as Fiat-Shamir heuristic
 
 #### Registration process:
 
