@@ -15,6 +15,14 @@ import FSBase from './fsbase';
  * 3. solving a challange given by verifier
  */
 class Client extends FSBase {
+  constructor(p, g = 2, m = 'md5') {
+    super(p, g);
+    if (!FSBase.ACCEPTABLE_METHODS[m]) {
+      const methods = Object.keys(FSBase.ACCEPTABLE_METHODS).toString();
+      throw new Error(`Unsuported method ${m}. Supported methods are: ${methods}`);
+    }
+    this.method = m;
+  }
   /**
    * Calculate value to be used for registration purpose.
    * @param {String} password Choosen password
@@ -47,10 +55,9 @@ class Client extends FSBase {
    * @private
    */
   calculateSecret(password) {
-    const md = forge.md.sha384.create();
-    md.update(Buffer.from(password).toString('base64'));
-    return bigInt(parseInt(md.digest().toHex().substr(0, 8), 16))
-      .mod(this.prime);
+    const md = forge.md[this.method].create();
+    md.update(password);
+    return bigInt(parseInt(md.digest().toHex().substr(0, 8), 16)).mod(this.prime);
   }
 }
 
