@@ -23,8 +23,13 @@ class Utils {
    */
   static async getPrime(bits = 1024) {
     return new Promise((resolve, reject) => {
-      // generate a random prime on the main JS thread
-      forge.prime.generateProbablePrime(bits, (err, num) => {
+      const opts = {
+        algorithm: {
+          name: 'PRIMEINC',
+          workers: -1
+        }
+      };
+      forge.prime.generateProbablePrime(bits, opts, (err, num) => {
         if (err) {
           reject(err);
         }

@@ -7,8 +7,6 @@ import FSBase from './fsbase';
 import Utils from './utils';
 
 /**
- * Helper methods enabling user to prove identity without
- * compromising the password and without shared or public keys.
  * Client class is responsible for:
  * 1. calculation of registration value
  * 2. calculation of sign in value

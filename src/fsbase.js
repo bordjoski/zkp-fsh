@@ -22,7 +22,6 @@ class FSBase {
   constructor(p, g = 2) {
     this.prime = bigInt(p.toString());
     this.generator = bigInt(g);
-    // this.random = this.generateRandom();
   }
 
   /**
@@ -33,6 +32,9 @@ class FSBase {
     return Utils.getRandomSync(bits);
   }
 
+  /**
+   * @private
+   */
   setRandom(v) {
     this.random = bigInt(v);
   }
