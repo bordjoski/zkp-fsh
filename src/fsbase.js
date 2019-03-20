@@ -25,7 +25,7 @@ class FSBase {
     this.generator = bigInt(g);
     this.random = r === 0
       ? this.generateRandom()
-      : this.setRandom(r);
+      : bigInt(r);
   }
 
   /**
