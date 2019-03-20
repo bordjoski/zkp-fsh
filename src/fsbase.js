@@ -20,10 +20,12 @@ class FSBase {
    * @param {Number} g Generator
    * @param {Number} r Random number
    */
-  constructor(p, g = 2) {
+  constructor(p, g = 2, r = 0) {
     this.prime = bigInt(p.toString());
     this.generator = bigInt(g);
-    this.random = this.generateRandom();
+    this.random = r === 0
+      ? this.generateRandom()
+      : this.setRandom(r);
   }
 
   /**
@@ -32,6 +34,10 @@ class FSBase {
   generateRandom() {
     const bits = this.prime.bitLength();
     return Utils.getRandomSync(bits);
+  }
+
+  setRandom(v) {
+    this.random = bigInt(v);
   }
 }
 

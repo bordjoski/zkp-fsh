@@ -15,20 +15,12 @@ import FSBase from './fsbase';
  * 3. solving a challange given by verifier
  */
 class Client extends FSBase {
-  constructor(p, g = 2, m = 'md5') {
-    if (!FSBase.ACCEPTABLE_METHODS[m]) {
-      const methods = Object.keys(FSBase.ACCEPTABLE_METHODS).toString();
-      throw new Error(`Unsuported method ${m}. Supported methods are: ${methods}`);
-    }
-    super(p, g);
-    this.method = m;
-  }
   /**
    * Calculate value to be used for registration purpose.
    * @param {String} password Choosen password
    */
-  getRegistrationValue(password) {
-    const x = this.calculateSecret(password);
+  getRegistrationValue(password, method = 'md5') {
+    const x = this.calculateSecret(password, method);
     return this.generator.modPow(x, this.prime);
   }
 
@@ -44,8 +36,8 @@ class Client extends FSBase {
    * @param {String} password Choosen password
    * @param {Number} challange Random number given by verifier
    */
-  solveChallange(password, challange) {
-    const x = this.calculateSecret(password);
+  solveChallange(password, challange, method = 'md5') {
+    const x = this.calculateSecret(password, method);
     return this.random.minus(bigInt(challange).multiply(x));
   }
 
@@ -54,8 +46,12 @@ class Client extends FSBase {
    * @param {String} password Choosen password
    * @private
    */
-  calculateSecret(password) {
-    const md = forge.md[this.method].create();
+  calculateSecret(password, method) {
+    if (!FSBase.ACCEPTABLE_METHODS[method]) {
+      const methods = Object.keys(FSBase.ACCEPTABLE_METHODS).toString();
+      throw new Error(`Unsuported method ${method}. Supported methods are: ${methods}`);
+    }
+    const md = forge.md[method].create();
     md.update(password);
     return bigInt(parseInt(md.digest().toHex().substr(0, 8), 16)).mod(this.prime);
   }

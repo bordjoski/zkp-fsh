@@ -17,10 +17,8 @@ describe('Library test', () => {
   });
 
   it('Should generate valid registration value', () => {
-    client = new Client(prime, 2, 'sha384');
+    client = new Client(prime);
     verifier = new Verifier(prime);
-    console.log('client random', client.random);
-    console.log('verifier r', verifier.random);
     registrationValue = client.getRegistrationValue(clientPassword);
     console.log('registration value', registrationValue)
     assert(registrationValue, 'Registration value should not be NaN');
@@ -33,7 +31,8 @@ describe('Library test', () => {
   });
 
   it('Should solve a challange given by verifier', () => {
-    solvedChallange = client.solveChallange(clientPassword, verifier.getChallange());
+    const challange = verifier.getChallange();
+    solvedChallange = client.solveChallange(clientPassword, challange);
     console.log('Challange:', verifier.getChallange());
     console.log('Solved challange', solvedChallange);
     assert(!isNaN(solvedChallange), 'Sign in value should not be NaN');
@@ -44,8 +43,9 @@ describe('Library test', () => {
     assert(success, 'Should succeed');
   });
 
-  it('Verification should fail in the case of wrong password', () => {
-    solvedChallange = client.solveChallange('wrong-password', verifier.getChallange());
+  it('Verification should fail in the case of wrong password', async () => {
+    const challange = await verifier.getChallange();
+    solvedChallange = client.solveChallange('wrong-password', challange);
     const success = verifier.verifyChallange(solvedChallange, registrationValue, signInValue);
     assert(!success, 'Should fail');
   });
@@ -60,8 +60,6 @@ describe('Library test 2048', () => {
   it('Should generate valid registration value', () => {
     client = new Client(prime, 7);
     verifier = new Verifier(prime, 7);
-    console.log('client random', client.random);
-    console.log('verifier r', verifier.random);
     registrationValue = client.getRegistrationValue(clientPassword);
     console.log('registration value', registrationValue);
     assert(registrationValue, 'Registration value should not be NaN');
