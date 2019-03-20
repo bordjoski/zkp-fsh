@@ -3,8 +3,8 @@
  */
 
 import bigInt from 'big-integer';
-import forge from 'node-forge';
 import FSBase from './fsbase';
+import Utils from './utils';
 
 /**
  * Helper methods enabling user to prove identity without
@@ -28,6 +28,7 @@ class Client extends FSBase {
    * Get initial value for sign in process.
    */
   getSignInValue() {
+    this.random = this.generateRandom();
     return this.generator.modPow(this.random, this.prime);
   }
 
@@ -51,9 +52,7 @@ class Client extends FSBase {
       const methods = Object.keys(FSBase.ACCEPTABLE_METHODS).toString();
       throw new Error(`Unsuported method ${method}. Supported methods are: ${methods}`);
     }
-    const md = forge.md[method].create();
-    md.update(password);
-    return bigInt(parseInt(md.digest().toHex().substr(0, 8), 16)).mod(this.prime);
+    return bigInt(Utils.fromPassword(password)).mod(this.prime);
   }
 }
 

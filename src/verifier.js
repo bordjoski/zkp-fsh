@@ -14,28 +14,25 @@ import Utils from './utils';
 class Verifier extends FSBase {
   /**
    * Verifies result provided by initiator of sign in process.
-   * @param {Number} challangeResult Solved challange value
-   * @param {Number} registrationValue Value used in registration process
-   * @param {Number} signInValue Value provided by initiator in sign in process
+   * @param {Number} c Solved challange value
+   * @param {Number} r Value used in registration process
+   * @param {Number} s Value provided by initiator in sign in process
+   * @param {Number} q Optional - challange given to the Client
    */
-  verifyChallange(challangeResult, registrationValue, signInValue) {
-    // (g**challangeResult) * (registrationValue**valueOfVerifier) = signInValue
-
-    const bigChallangeResult = bigInt(challangeResult);
-    // (registrationValue**valueOfVerifier)
-    const n = bigInt(registrationValue).modPow(this.random, this.prime);
-
-    // (g**challangeResult)
-    const m = bigChallangeResult.isNegative()
+  verifyChallange(c, r, s, q) {
+    if (q) this.setRandom(q);
+    const bc = bigInt(c);
+    const n = bigInt(r).modPow(this.random, this.prime);
+    const m = bc.isNegative()
       ? this.inverseOf(
-        this.generator.modPow(bigChallangeResult.times(bigInt(-1)), this.prime),
+        this.generator.modPow(bc.times(bigInt(-1)), this.prime),
         this.prime
       )
-      : this.generator.modPow(bigChallangeResult, this.prime);
+      : this.generator.modPow(bc, this.prime);
 
     const mn = m.times(n);
-    const r = mn.mod(this.prime);
-    return bigInt(signInValue).eq(r);
+    const v = mn.mod(this.prime);
+    return bigInt(s).eq(v);
   }
 
   /**
@@ -54,26 +51,23 @@ class Verifier extends FSBase {
     const x = bigInt(r._data[1].toString());
     // In case r._data[1] is negative, add extra p
     // since multiplicative inverse of A in range p lies in the range [0, p-1]
-    const xp = x.isNegative()
-      ? x.plus(p)
-      : x;
-
+    const xp = x.isNegative() ? x.plus(p) : x;
     return xp.mod(p);
   }
 
   /**
    * @override
    */
-  // eslint-disable-next-line class-methods-use-this
   generateRandom() {
     const bits = this.prime.bitLength();
-    return Utils.getRandomSync(Math.floor(bits * 0.9));
+    return Utils.getRandomSync(Math.floor(bits * 0.98));
   }
 
   /**
    * Get a challange for client.
    */
   getChallange() {
+    this.random = this.generateRandom();
     return this.random;
   }
 }

@@ -48,6 +48,12 @@ class Utils {
     const r = forge.random.getBytesSync(bytes);
     return bigInt(forge.util.bytesToHex(r), 16);
   }
+
+  static fromPassword(value, method = 'md5') {
+    const md = forge.md[method].create();
+    md.update(value);
+    return parseInt(md.digest().toHex().substr(0, 8), 16);
+  }
 }
 
 export default Utils;

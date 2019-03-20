@@ -12,7 +12,7 @@ let prime;
 
 describe('Library test', () => {
   it('Should generate large prime', async () => {
-    prime = await Utils.getPrime();
+    prime = await Utils.getPrime(1024);
     assert(prime, `${prime} invalid`);
   });
 
@@ -20,21 +20,17 @@ describe('Library test', () => {
     client = new Client(prime);
     verifier = new Verifier(prime);
     registrationValue = client.getRegistrationValue(clientPassword);
-    console.log('registration value', registrationValue)
     assert(registrationValue, 'Registration value should not be NaN');
   });
 
   it('Should generate valid signin value', () => {
     signInValue = client.getSignInValue();
-    console.log('Sign in value', signInValue);
     assert(!isNaN(signInValue), 'Sign in value should not be NaN');
   });
 
   it('Should solve a challange given by verifier', () => {
     const challange = verifier.getChallange();
     solvedChallange = client.solveChallange(clientPassword, challange);
-    console.log('Challange:', verifier.getChallange());
-    console.log('Solved challange', solvedChallange);
     assert(!isNaN(solvedChallange), 'Sign in value should not be NaN');
   });
 
@@ -58,23 +54,20 @@ describe('Library test 2048', () => {
   });
 
   it('Should generate valid registration value', () => {
-    client = new Client(prime, 7);
-    verifier = new Verifier(prime, 7);
+    client = new Client(prime);
+    verifier = new Verifier(prime);
     registrationValue = client.getRegistrationValue(clientPassword);
-    console.log('registration value', registrationValue);
     assert(registrationValue, 'Registration value should not be NaN');
   });
 
   it('Should generate valid signin value', () => {
     signInValue = client.getSignInValue();
-    console.log('sign in value', signInValue);
     assert(!isNaN(signInValue), 'Sign in value should not be NaN');
   });
 
   it('Should solve a challange given by verifier', () => {
-    solvedChallange = client.solveChallange(clientPassword, verifier.getChallange());
-    console.log('Challange:', verifier.getChallange());
-    console.log('Solved challange', solvedChallange);
+    const challange = verifier.getChallange();
+    solvedChallange = client.solveChallange(clientPassword, challange);
     assert(!isNaN(solvedChallange), 'Sign in value should not be NaN');
   });
 

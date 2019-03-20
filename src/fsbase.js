@@ -18,14 +18,11 @@ class FSBase {
   /**
    * @param {Number} p Prime number
    * @param {Number} g Generator
-   * @param {Number} r Random number
    */
-  constructor(p, g = 2, r = 0) {
+  constructor(p, g = 2) {
     this.prime = bigInt(p.toString());
     this.generator = bigInt(g);
-    this.random = r === 0
-      ? this.generateRandom()
-      : bigInt(r);
+    // this.random = this.generateRandom();
   }
 
   /**
