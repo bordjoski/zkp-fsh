@@ -3,6 +3,7 @@
  */
 
 import forge from 'node-forge';
+import bigInt from 'big-integer';
 
 /**
  * Utils class provides helper methods for calculating prime numbers
@@ -32,23 +33,20 @@ class Utils {
     });
   }
 
-  /**
-   * Get random value in range of given number
-   * @param {Number} max Agreed prime number
-   */
-  static getRandomValue(max) {
-    return Utils.inRange(1, max);
+  static async getRandomAsync(bytes) {
+    return new Promise((resolve, reject) => {
+      forge.random.getBytes(bytes, (err, r) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(bigInt(forge.util.bytesToHex(r), 16));
+      });
+    });
   }
 
-  /**
-   * Returns random number in given range
-   * @param {Number} min
-   * @param {Number} max
-   */
-  static inRange(min, max) {
-    const minx = Math.ceil(min);
-    const maxx = Math.floor(max);
-    return Math.floor(Math.random() * ((maxx - minx) + 1)) + minx;
+  static getRandomSync(bytes) {
+    const r = forge.random.getBytesSync(bytes);
+    return bigInt(forge.util.bytesToHex(r), 16);
   }
 }
 

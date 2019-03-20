@@ -3,7 +3,7 @@
  * Helper methods enabling user to prove identity without compromising the password
  * and without shared or public keys.
  * Implements non-interactive random oracle access method for Zero Knowladge Proof.
- * Fiat-Shamir heruistic
+ * Fiat-Shamir heuristic
  * @see https://link.springer.com/content/pdf/10.1007/3-540-47721-7_12.pdf
  */
 

@@ -16,11 +16,11 @@ import FSBase from './fsbase';
  */
 class Client extends FSBase {
   constructor(p, g = 2, m = 'md5') {
-    super(p, g);
     if (!FSBase.ACCEPTABLE_METHODS[m]) {
       const methods = Object.keys(FSBase.ACCEPTABLE_METHODS).toString();
       throw new Error(`Unsuported method ${m}. Supported methods are: ${methods}`);
     }
+    super(p, g);
     this.method = m;
   }
   /**

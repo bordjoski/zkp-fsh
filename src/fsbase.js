@@ -30,35 +30,9 @@ class FSBase {
    * @private
    */
   generateRandom() {
-    return this.getDirt(256);
+    const bits = this.prime.bitLength();
+    return Utils.getRandomSync(bits);
   }
-
-  // -----------temporary fix:
-  /**
-   * Dirty fix made to be able to test larger primes and randoms.
-   * Speed out of focus
-   * Randoms should be generated with random bytes method from crypto or forge PRNG
-   */
-  getDirt(bits, n = 1) {
-    let m = 33;
-    let s = '';
-    while (m > 0) {
-      s += this.getPartOf(Math.floor(bits / n)).toString().split('n').join('');
-      m -= 1;
-    }
-    return bigInt(s);
-  }
-
-  /**
-   * @private
-   */
-  getPartOf(bits) {
-    return bigInt(Utils.getRandomValue(this.prime.toString().substr(
-      0,
-      Math.floor(this.prime.toString().length / (Math.floor(this.prime.toString().length / bits)))
-    )));
-  }
-  // ----------- end of temporary fix
 }
 
 export default FSBase;
