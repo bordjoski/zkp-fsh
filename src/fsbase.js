@@ -22,6 +22,7 @@ class FSBase {
   constructor(p, g = 2) {
     this.prime = bigInt(p.toString());
     this.generator = bigInt(g);
+    if (!this.prime.isProbablePrime()) throw new Error('Invalid prime.');
   }
 
   /**
