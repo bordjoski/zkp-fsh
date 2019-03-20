@@ -17,7 +17,7 @@ class Verifier extends FSBase {
    * @param {Number} c Solved challange value
    * @param {Number} r Value used in registration process
    * @param {Number} s Value provided by initiator in sign in process
-   * @param {Number} q Optional - challange given to the Client
+   * @param {Number} q Challange given to the Client
    */
   verifyChallange(c, r, s, q) {
     if (q) this.setRandom(q);
