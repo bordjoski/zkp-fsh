@@ -1,6 +1,6 @@
 # zkp-fish
 
-#### The library is made as a proof of concept only and it was not reviewed by anyone. Not ment to be used in production enviroment.
+#### The library is made as a proof of concept only and it was not reviewed by anyone. Part of learning curve and not ment to be used in production enviroment.
 
 Helper methods and proof of concept library enabling user to authenticate without compromising the password and without shared or public keys.\
 Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heuristic.
@@ -42,14 +42,15 @@ In the case password based authentication system is required, it is wise to cons
 
 #### Proove that Client still knows the password
 `// Solve a challange given by Verifier`\
-`const solvedChallange = client.solveChallange('password', verifier.getChallange());`
+`const challange = verifier.getChallange();`
+`const solvedChallange = client.solveChallange('password', challange);`
 
 #### Verify that Client still knows the password
 `const verifier = new zkpfsh.Verifier(prime, generator);`\
-`const success = verifier.verifyChallange(solvedChallangeByClient, registrationValue, signInValue);`
+`const success = verifier.verifyChallange(solvedChallange, registrationValue, signInValue);`
 
 ### References, Credits and Links
-- Code snippets and lectures by Prof Bill Buchanan: https://asecuritysite.com
+- Code snippets in Python and article by Prof Bill Buchanan: https://asecuritysite.com/encryption/fiat2
 - Video presentation on specific topic by Prof Bill Buchanan: https://www.youtube.com/watch?v=n2WUJyk9cHA
 - Original paper: How To Prove Yourself: Practical Solutions to Identification and Signature Problems: https://link.springer.com/content/pdf/10.1007/3-540-47721-7_12.pdf
 - forge documentation https://www.npmjs.com/package/node-forge

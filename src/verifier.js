@@ -60,6 +60,7 @@ class Verifier extends FSBase {
    */
   generateRandom() {
     const bits = this.prime.bitLength();
+    // making sure verifier has safe random to operate with
     return Utils.getRandomSync(Math.floor(bits * 0.98));
   }
 
