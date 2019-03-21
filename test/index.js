@@ -9,19 +9,20 @@ let solvedChallange;
 let client;
 let verifier;
 let prime;
+let generator = 2;
 
-const methods = ['md5', 'sha384', 'sha384', 'sha1', 'sha512'];
-const primes = [32, 64, 128, 256, 512, 1024, 2048];
+const methods = ['md5', 'sha1', 'sha256', 'sha384', 'sha512'];
+const pBits = [32, 64, 128, 256, 512, 1024, 2048];
 methods.map(async m => {
   describe(`Library test ${m}`, () => {
-    primes.map(async p => {
+    pBits.map(async p => {
       it(`${m} - ${p} test - Should generate valid prime`, async () => {
         prime = await Utils.getPrime(p);
         assert(prime, `${prime} invalid`);
       });
 
       it(`${m} - ${p} test - Should generate valid registration value`, () => {
-        client = new Client(prime);
+        client = new Client(prime, generator);
         registrationValue = client.getRegistrationValue(clientPassword, m);
         assert(registrationValue, 'Registration value should not be NaN');
       });
@@ -32,7 +33,7 @@ methods.map(async m => {
       });
 
       it(`${m} - ${p} test - Should solve a challange given by verifier`, () => {
-        verifier = new Verifier(prime);
+        verifier = new Verifier(prime, generator);
         const challange = verifier.getChallange();
         solvedChallange = client.solveChallange(clientPassword, challange, m);
         assert(!isNaN(solvedChallange), 'Sign in value should not be NaN');

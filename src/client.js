@@ -17,8 +17,8 @@ class Client extends FSBase {
    * Calculate value to be used for registration purpose.
    * @param {String} password Choosen password
    */
-  getRegistrationValue(password, method = 'md5') {
-    const x = this.calculateSecret(password, method);
+  getRegistrationValue(password, md = 'md5') {
+    const x = this.calculateSecret(password, md);
     return this.generator.modPow(x, this.prime);
   }
 
@@ -35,8 +35,8 @@ class Client extends FSBase {
    * @param {String} password Choosen password
    * @param {Number} challange Random number given by verifier
    */
-  solveChallange(password, challange, method = 'md5') {
-    const x = this.calculateSecret(password, method);
+  solveChallange(password, challange, md = 'md5') {
+    const x = this.calculateSecret(password, md);
     return this.random.minus(bigInt(challange).multiply(x));
   }
 
@@ -45,10 +45,10 @@ class Client extends FSBase {
    * @param {String} password Choosen password
    * @private
    */
-  calculateSecret(password, method) {
-    if (!FSBase.ACCEPTABLE_METHODS[method]) {
-      const methods = Object.keys(FSBase.ACCEPTABLE_METHODS).toString();
-      throw new Error(`Unsuported method ${method}. Supported methods are: ${methods}`);
+  calculateSecret(password, md) {
+    if (!FSBase.ACCEPTABLE_DIGEST[md]) {
+      const supported = Object.keys(FSBase.ACCEPTABLE_DIGEST).toString();
+      throw new Error(`Unsuported ${md}. Supported message digest are: ${supported}`);
     }
     return bigInt(Utils.fromPassword(password)).mod(this.prime);
   }

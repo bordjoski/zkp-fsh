@@ -54,9 +54,9 @@ class Utils {
     return bigInt(forge.util.bytesToHex(r), 16);
   }
 
-  static fromPassword(value, method = 'md5') {
-    const md = forge.md[method].create().update(value);
-    return parseInt(md.digest().toHex().substr(0, 8), 16);
+  static fromPassword(value, md = 'md5') {
+    const d = forge.md[md].create().update(value);
+    return parseInt(d.digest().toHex().substr(0, 8), 16);
   }
 }
 

@@ -42,7 +42,7 @@ In the case password based authentication system is required, it is wise to cons
 
 #### Proove that Client still knows the password
 `// Solve a challange given by Verifier`\
-`const challange = verifier.getChallange();`
+`const challange = verifier.getChallange();`\
 `const solvedChallange = client.solveChallange('password', challange);`
 
 #### Verify that Client still knows the password
