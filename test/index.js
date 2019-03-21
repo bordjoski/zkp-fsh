@@ -11,7 +11,7 @@ let verifier;
 let prime;
 
 const methods = ['md5', 'sha384', 'sha384', 'sha1', 'sha512'];
-const primes = [32, 62, 128, 256, 512, 1024, 2048];
+const primes = [32, 64, 128, 256, 512, 1024, 2048];
 methods.map(async m => {
   describe(`Library test ${m}`, () => {
     primes.map(async p => {
