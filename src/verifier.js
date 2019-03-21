@@ -6,7 +6,6 @@
 import bigInt from 'big-integer';
 import math from 'mathjs';
 import FSBase from './fsbase';
-import Utils from './utils';
 
 /**
  * Verifier class exposes a method enabling verifier to verify solved challange
@@ -44,24 +43,21 @@ class Verifier extends FSBase {
    */
   // eslint-disable-next-line class-methods-use-this
   inverseOf(n, p) {
+    math.config({
+      number: 'BigNumber',
+      precision: Math.floor(this.random.bitLength() * 0.5)
+    });
+
     const r = math.xgcd(
       math.bignumber(n.toString()),
       math.bignumber(p.toString())
     );
+
     const x = bigInt(r._data[1].toString());
     // In case r._data[1] is negative, add extra p
     // since multiplicative inverse of A in range p lies in the range [0, p-1]
     const xp = x.isNegative() ? x.plus(p) : x;
     return xp.mod(p);
-  }
-
-  /**
-   * @override
-   */
-  generateRandom() {
-    const bits = this.prime.bitLength();
-    // making sure verifier has safe random to operate with
-    return Utils.getRandomSync(Math.floor(bits * 0.98));
   }
 
   /**
