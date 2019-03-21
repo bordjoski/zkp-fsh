@@ -12,9 +12,9 @@ class FSBase {
   static get ACCEPTABLE_METHODS() {
     return {
       md5: true,
-      sha384: true,
-      sha256: true,
       sha1: true,
+      sha256: true,
+      sha384: true,
       sha512: true
     };
   }
