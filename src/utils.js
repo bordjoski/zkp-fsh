@@ -9,8 +9,8 @@ import bigInt from 'big-integer';
  * Utils class provides helper methods for calculating prime numbers
  */
 class Utils {
-  static async generateAgreement() {
-    const p = await Utils.getPrime();
+  static async generateAgreement(bits) {
+    const p = await Utils.getPrime(bits);
     const g = 2;
     return {
       prime: p,
