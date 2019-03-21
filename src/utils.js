@@ -55,8 +55,7 @@ class Utils {
   }
 
   static fromPassword(value, method = 'md5') {
-    const md = forge.md[method].create();
-    md.update(value);
+    const md = forge.md[method].create().update(value);
     return parseInt(md.digest().toHex().substr(0, 8), 16);
   }
 }
