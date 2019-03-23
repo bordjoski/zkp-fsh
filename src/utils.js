@@ -30,33 +30,29 @@ class Utils {
         }
       };
       forge.prime.generateProbablePrime(bits, opts, (err, num) => {
-        if (err) {
-          reject(err);
-        }
+        if (err) reject(err);
         resolve(num);
       });
     });
   }
 
-  static async getRandomAsync(bytes) {
+  static async getRandomAsync(bits) {
     return new Promise((resolve, reject) => {
-      forge.random.getBytes(bytes, (err, r) => {
-        if (err) {
-          reject(err);
-        }
+      forge.random.getBytes(bits, (err, r) => {
+        if (err) reject(err);
         resolve(bigInt(forge.util.bytesToHex(r), 16));
       });
     });
   }
 
-  static getRandomSync(bytes) {
-    const r = forge.random.getBytesSync(bytes);
+  static getRandomSync(bits) {
+    const r = forge.random.getBytesSync(bits);
     return bigInt(forge.util.bytesToHex(r), 16);
   }
 
   static fromPassword(value, md = 'md5') {
-    const d = forge.md[md].create().update(value);
-    return parseInt(d.digest().toHex().substr(0, 8), 16);
+    const d = forge.md[md].create().update(value).digest();
+    return parseInt(d.toHex().substr(0, 8), 16);
   }
 }
 

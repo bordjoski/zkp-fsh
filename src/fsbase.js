@@ -30,7 +30,7 @@ class FSBase {
     this.generator = bigInt(g);
     this.power = pw;
     if (!this.prime.isProbablePrime()) throw new Error('Invalid prime.');
-    if (this.prime.bitLength() < 32) throw new Error('You are Optimus Prime!');
+    if (this.prime.bitLength() < 128) throw new Error('You are Optimus Prime!');
   }
 
   /**

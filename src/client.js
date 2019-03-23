@@ -50,7 +50,7 @@ class Client extends FSBase {
       const supported = Object.keys(FSBase.ACCEPTABLE_DIGEST).toString();
       throw new Error(`Unsuported ${md}. Supported message digest are: ${supported}`);
     }
-    return bigInt(Utils.fromPassword(password)).mod(this.prime);
+    return bigInt(Utils.fromPassword(password, md)).mod(this.prime);
   }
 }
 
