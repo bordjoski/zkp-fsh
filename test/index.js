@@ -25,15 +25,14 @@ const pModes = [
     expectedComparation: 12
   }];
 
-algs.map(async (a) => {
+pBits.map(async (p) => {
   pModes.map(async (pMode) => {
-    describe(`${a} - Library test with power ${pMode.power ? 'on' : 'off'}`, () => {
-      pBits.map(async (p) => {
-        it(`${a} - ${p} test - Should be able to generate valid prime`, async () => {
-          prime = await Utils.getPrime(p);
-          assert(bigInt(prime.toString()).isProbablePrime(), 'Invalid prime');
-        });
-
+    describe(`${p}bit - Library test with power ${pMode.power ? 'on' : 'off'}`, () => {
+      it(`${p}bit test - Should be able to generate valid prime`, async () => {
+        prime = await Utils.getPrime(p);
+        assert(bigInt(prime.toString()).isProbablePrime(), 'Invalid prime');
+      });
+      algs.map(async (a) => {
         it(`${a} - ${p} test - Client should be able generate valid registration value`, () => {
           client = new Client(prime, generator, pMode.power);
           password = `password${(Math.random() * 100000).toString()}`;
