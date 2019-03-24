@@ -20,15 +20,14 @@ class FSBase {
   }
   static get MAX_POWER() { return 1.5; }
   /**
-   * @param {Number} p Prime number
-   * @param {Number} g Generator
-   * @param {Number} pw Power. If true, produces larger randoms.
+   * @param {Object} agreement Agreement agreed between Client and Verifier
+   * @param {Boolean} power If true, produces larger randoms.
    * Careful. Affects challange size or solved challange size and verification speed
    */
-  constructor(p, g = 2, pw = false) {
-    this.prime = bigInt(p.toString());
-    this.generator = bigInt(g);
-    this.power = pw;
+  constructor(agreement, power = false) {
+    this.prime = bigInt(agreement.prime);
+    this.generator = bigInt(agreement.generator);
+    this.power = power;
     if (!this.prime.isProbablePrime()) throw new Error('Invalid prime.');
     if (this.prime.bitLength() < 128) throw new Error('Prime must be at least 128bit');
   }

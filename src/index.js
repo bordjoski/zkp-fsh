@@ -13,9 +13,11 @@ import 'babel-polyfill';
 import Verifier from './verifier';
 import Client from './client';
 import Utils from './utils';
+import Agreement from './agreement';
 
 export {
   Verifier,
   Client,
   Utils,
+  Agreement
 };

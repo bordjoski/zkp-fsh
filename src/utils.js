@@ -6,20 +6,13 @@ import forge from 'node-forge';
 import bigInt from 'big-integer';
 
 /**
- * Utils class provides helper methods for calculating prime numbers
+ * Helper methods
  */
 class Utils {
-  static async generateAgreement(bits) {
-    const p = await Utils.getPrime(bits);
-    const g = 2;
-    return {
-      prime: p,
-      generator: g
-    };
-  }
   /**
-   * Returns random large prime number both initiator
-   * and verifier will agree to use.
+   * Generate prime number both initiator
+   * and verifier have to agree to use.
+   * @param {Number} bits Length
    */
   static async getPrime(bits = 1024) {
     return new Promise((resolve, reject) => {
@@ -31,11 +24,15 @@ class Utils {
       };
       forge.prime.generateProbablePrime(bits, opts, (err, num) => {
         if (err) reject(err);
-        resolve(num);
+        resolve(bigInt(num.toString()));
       });
     });
   }
 
+  /**
+   * Generate random - async
+   * @param {Number} bits Length
+   */
   static async getRandomAsync(bits) {
     return new Promise((resolve, reject) => {
       forge.random.getBytes(bits, (err, r) => {
@@ -45,14 +42,42 @@ class Utils {
     });
   }
 
+  /**
+   * Generate random - sync
+   * @param {Number} bits Length
+   */
   static getRandomSync(bits) {
     const r = forge.random.getBytesSync(bits);
     return bigInt(forge.util.bytesToHex(r), 16);
   }
 
+  /**
+   * @private
+   * md
+   * @param {String} value Password
+   * @param {String} md Algorithm
+   */
   static fromPassword(value, md = 'md5') {
     const d = forge.md[md].create().update(value).digest();
-    return parseInt(d.toHex().substr(0, 8), 16);
+    return bigInt(parseInt(d.toHex().substr(0, 8), 16));
+  }
+
+  /**
+   * Generate prime and generator Client and Verifier will agree to use
+   * @param {Number} bits Length
+   * @private
+   */
+  static async generateAgreement(bits) {
+    return new Promise((resolve, reject) => {
+      Utils.getPrime(bits).then((p) => {
+        resolve({
+          prime: p,
+          generator: bigInt(2)
+        });
+      }).catch((e) => {
+        reject(e);
+      });
+    });
   }
 }
 

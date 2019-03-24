@@ -33,7 +33,7 @@ class Client extends FSBase {
   /**
    * Solves a challange given by verifier.
    * @param {String} password Choosen password
-   * @param {Number} challange Random number given by verifier
+   * @param {*} challange Random number given by verifier
    */
   solveChallange(password, challange, md = 'md5') {
     const x = this.calculateSecret(password, md);
@@ -50,7 +50,7 @@ class Client extends FSBase {
       const supported = Object.keys(FSBase.ACCEPTABLE_DIGEST).toString();
       throw new Error(`Unsuported ${md}. Supported message digest are: ${supported}`);
     }
-    return bigInt(Utils.fromPassword(password, md)).mod(this.prime);
+    return Utils.fromPassword(password, md).mod(this.prime);
   }
 }
 

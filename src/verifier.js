@@ -13,10 +13,10 @@ import FSBase from './fsbase';
 class Verifier extends FSBase {
   /**
    * Verifies result provided by initiator of sign in process.
-   * @param {Number} c Solved challange value
-   * @param {Number} r Value used in registration process
-   * @param {Number} s Value provided by initiator in sign in process
-   * @param {Number} q Challange given to the Client
+   * @param {*} c Solved challange value
+   * @param {*} r Value used in registration process
+   * @param {*} s Value provided by initiator in sign in process
+   * @param {*} q Challange given to the Client
    */
   verifyChallange(c, r, s, q) {
     if (q) this.setRandom(q);
@@ -37,8 +37,8 @@ class Verifier extends FSBase {
   /**
    * If challange result is negative number, compute the inverse mod of it -
    * determinated by extended euclidean algorithm
-   * @param {Number} n g**-challangeResult % p
-   * @param {Number} p Prime number
+   * @param {Integer} n g**-challangeResult % p
+   * @param {Integer} p Prime number
    * @private
    */
   // eslint-disable-next-line class-methods-use-this
