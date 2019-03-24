@@ -45,7 +45,7 @@ class Verifier extends FSBase {
   inverseOf(n, p) {
     math.config({
       number: 'BigNumber',
-      precision: Math.floor(this.random.bitLength() * 0.5)
+      precision: Math.floor(this.prime.bitLength() * 0.33)
     });
 
     const r = math.xgcd(
