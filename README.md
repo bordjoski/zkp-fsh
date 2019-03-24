@@ -30,10 +30,10 @@ In the case password based authentication system is required, it is worth consid
 #### Calculate registration value
 
 `const zkpfsh = require('zkp-fish');`\
-`// Client and Verifier must agree on prime and generator:`\
+Client and Verifier must agree on prime and generator:\
 `const prime = await zkpfsh.Utils.getPrime(1024);`\
 `const generator = 2;`\
-`// Generate registration value:`\
+Client generates registration value based on password value:\
 `const client = new zkpfsh.Client(prime, generator);`\
 `const registrationValue = client.getRegistrationValue('password');`
 
@@ -41,12 +41,12 @@ In the case password based authentication system is required, it is worth consid
 `const signInValue = client.getSignInValue();`
 
 #### Proove that Client still knows the password
-`// Solve a challange given by Verifier`\
+Client must be able to solve a challange given by Verifier\
+`const verifier = new zkpfsh.Verifier(prime, generator);`\
 `const challange = verifier.getChallange();`\
 `const solvedChallange = client.solveChallange('password', challange);`
 
 #### Verify that Client still knows the password
-`const verifier = new zkpfsh.Verifier(prime, generator);`\
 `const success = verifier.verifyChallange(solvedChallange, registrationValue, signInValue);`
 
 ### References, Credits and Links
