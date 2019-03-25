@@ -12,25 +12,26 @@ import FSBase from './fsbase';
  */
 class Verifier extends FSBase {
   /**
-   * Verifies result provided by initiator of sign in process.
+   * Verifies proof provided by initiator of verification process.
    * @param {*} c Solved challange value
    * @param {*} r Value used in registration process
    * @param {*} s Value provided by initiator in sign in process
-   * @param {*} q Challange given to the Client
+   * @param {*} q Challange given to the Client.
    */
-  verifyChallange(c, r, s, q) {
-    if (q) this.setRandom(q);
+  verify(c, r, s, q) {
+    if (!this.agreement) throw new Error('Agreement is required');
+    if (q) this.random = bigInt(q);
     const bc = bigInt(c);
-    const n = bigInt(r).modPow(this.random, this.prime);
+    const n = bigInt(r).modPow(this.random, this.agreement.prime);
     const m = bc.isNegative()
       ? this.inverseOf(
-        this.generator.modPow(bc.times(bigInt(-1)), this.prime),
-        this.prime
+        this.agreement.generator.modPow(bc.times(bigInt(-1)), this.agreement.prime),
+        this.agreement.prime
       )
-      : this.generator.modPow(bc, this.prime);
+      : this.agreement.generator.modPow(bc, this.agreement.prime);
 
     const mn = m.times(n);
-    const v = mn.mod(this.prime);
+    const v = mn.mod(this.agreement.prime);
     return bigInt(s).eq(v);
   }
 
@@ -45,7 +46,7 @@ class Verifier extends FSBase {
   inverseOf(n, p) {
     math.config({
       number: 'BigNumber',
-      precision: Math.floor(this.prime.bitLength() * 0.33)
+      precision: Math.floor(this.agreement.bitLength * 0.33)
     });
 
     const r = math.xgcd(

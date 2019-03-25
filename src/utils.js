@@ -10,8 +10,7 @@ import bigInt from 'big-integer';
  */
 class Utils {
   /**
-   * Generate prime number both initiator
-   * and verifier have to agree to use.
+   * Generate prime number with given bit length
    * @param {Number} bits Length
    */
   static async getPrime(bits = 1024) {
@@ -63,11 +62,11 @@ class Utils {
   }
 
   /**
-   * Generate prime and generator Client and Verifier will agree to use
+   * Generate prime and generator both Client and Verifier will agree to use
    * @param {Number} bits Length
    * @private
    */
-  static async generateAgreement(bits) {
+  static async generateAgreementValues(bits) {
     return new Promise((resolve, reject) => {
       Utils.getPrime(bits).then((p) => {
         resolve({

@@ -8,46 +8,38 @@ Implements non-interactive random oracle access method for Zero Knowladge Proof 
 ### Password based authentication system
 In the case password based authentication system is required, it is worth considering applying a method which would prevent exposing the passwords over the network and which does not require storing hashed passwords in the storage. Method used in the library is know as Fiat-Shamir heuristic
 
-#### Registration process:
-
-1. Client and Verifier agree on prime number and generator to be used
-2. Client calculates registration value based on prime number, generator value and password value and sends result to Verifier
-
-#### Sign in proccess:
-
-1. Client calculates sign in value based on prime, generator and random value and sends it to Verifier
-2. Verifier picks a random number and gives it to the Client to solve a challange
-3. Client calculates a challange result and sends result back to Verifier
-4. Verifier calculates if result is correct
-5. Client has prooven to know a password
-
 ### Installation
 
 `npm install zkp-fish --save`
 
-### Example Usage
+### Usage
+`const zkpfsh = require('zkp-fish');`
 
-#### Calculate registration value
+#### Registration process:
 
-`const zkpfsh = require('zkp-fish');`\
-Client and Verifier must agree on prime and generator:\
-`const prime = await zkpfsh.Utils.getPrime(1024);`\
-`const generator = 2;`\
-Client generates registration value based on password value:\
-`const client = new zkpfsh.Client(prime, generator);`\
-`const registrationValue = client.getRegistrationValue('password');`
+1. Client and Verifier agree on agreement object to be used (which by default uses 1024bit prime number)\
+`const agreement = await zkpfsh.Agreement.generateAgreement(1024);`\
+`const client = new zkpfsh.Client(agreement);`\
+`const verifier = new zkpfsh.Verifier(agreement);`
 
-#### Calculate sign in value
-`const signInValue = client.getSignInValue();`
+2. Client calculates registration value based on provided agreement and password value and sends result to Verifier.\
+`const registrationValue = client.getRegistration('password');`
 
-#### Proove that Client still knows the password
-Client must be able to solve a challange given by Verifier\
-`const verifier = new zkpfsh.Verifier(prime, generator);`\
-`const challange = verifier.getChallange();`\
-`const solvedChallange = client.solveChallange('password', challange);`
+#### Sign in proccess:
 
-#### Verify that Client still knows the password
-`const success = verifier.verifyChallange(solvedChallange, registrationValue, signInValue);`
+1. Client calculates sign in value based on agreement and sends it to Verifier\
+`const signInValue = client.getSignIn();`
+
+2. Verifier generates a challange\
+`const challange = verifier.getChallange();`
+
+3. Client calculates a challange result (proof) and sends result back to Verifier\
+`const proof = client.solveChallange('password', challange);`
+
+4. Verifier calculates if result is correct\
+`const success = verifier.verify(proof, registrationValue, signInValue);`
+
+5. Client has prooven to know a password
 
 ### References, Credits and Links
 - Code snippets in Python and article by Prof Bill Buchanan: https://asecuritysite.com/encryption/fiat2

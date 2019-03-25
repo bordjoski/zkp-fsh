@@ -17,25 +17,27 @@ class Client extends FSBase {
    * Calculate value to be used for registration purpose.
    * @param {String} password Choosen password
    */
-  getRegistrationValue(password, md = 'md5') {
+  getRegistration(password, md = 'md5') {
+    if (!this.agreement) throw new Error('Agreement is required');
     const x = this.calculateSecret(password, md);
-    return this.generator.modPow(x, this.prime);
+    return this.agreement.generator.modPow(x, this.agreement.prime);
   }
 
   /**
-   * Get initial value for sign in process.
+   * Get value for initialization of verification process.
    */
-  getSignInValue() {
+  getSignIn() {
     this.random = this.generateRandom();
-    return this.generator.modPow(this.random, this.prime);
+    return this.agreement.generator.modPow(this.random, this.agreement.prime);
   }
 
   /**
-   * Solves a challange given by verifier.
+   * Solves a challange given by verifier - gets a proof.
    * @param {String} password Choosen password
    * @param {*} challange Random number given by verifier
    */
   solveChallange(password, challange, md = 'md5') {
+    if (!this.random) throw new Error('Verification process not initialized');
     const x = this.calculateSecret(password, md);
     return this.random.minus(bigInt(challange).multiply(x));
   }
@@ -50,7 +52,7 @@ class Client extends FSBase {
       const supported = Object.keys(FSBase.ACCEPTABLE_DIGEST).toString();
       throw new Error(`Unsuported ${md}. Supported message digest are: ${supported}`);
     }
-    return Utils.fromPassword(password, md).mod(this.prime);
+    return Utils.fromPassword(password, md).mod(this.agreement.prime);
   }
 }
 

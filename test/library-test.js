@@ -1,5 +1,4 @@
 import { assert } from 'chai';
-import bigInt from 'big-integer';
 import { Client, Verifier, Agreement } from '../src';
 
 let registrationValue;
@@ -26,26 +25,26 @@ const pModes = [
 pBits.map(async (p) => {
   pModes.map(async (pMode) => {
     describe(`${p}bit - Library test with power ${pMode.power ? 'on' : 'off'}`, () => {
-      it(`${p}bit test - Should be able to generate valid prime`, async () => {
+      it(`${p}bit test - Should be able to generate valid agreement with given bit length`, async () => {
         agreement = await Agreement.generateAgreement(p);
         assert(agreement.isValid, 'Invalid agreement');
-        assert(agreement.bitLength.eq(bigInt(p)), `Invalid prime size ${agreement.bitLength}/ Expected ${p}`);
+        assert(agreement.bitLength === p, `Invalid prime size ${agreement.bitLength}. Expected ${p}`);
       });
       algs.map(async (a) => {
         it(`${p}bit - ${a} test - Client should be able generate valid registration value`, () => {
           client = new Client(agreement, pMode.power);
-          password = `password${(Math.random() * 100000).toString()}`;
-          registrationValue = client.getRegistrationValue(password, a);
+          password = 'password';
+          registrationValue = client.getRegistration(password, a);
           assert(
-            Math.round(agreement.prime.bitLength() / registrationValue.bitLength()) === 1,
+            Math.round(agreement.bitLength / registrationValue.bitLength()) === 1,
             `Unecpected registration value with ${registrationValue.bitLength()} lentgh`
           );
         });
 
         it(`${p}bit - ${a} test - Client should be able generate valid signin value`, () => {
-          signInValue = client.getSignInValue();
+          signInValue = client.getSignIn();
           assert(
-            Math.round(agreement.prime.bitLength() / signInValue.bitLength()) === 1,
+            Math.round(agreement.bitLength / signInValue.bitLength()) === 1,
             `Unecpected sign in value with ${signInValue.bitLength()} lentgh`
           );
         });
@@ -54,7 +53,7 @@ pBits.map(async (p) => {
           verifier = new Verifier(agreement, pMode.power);
           challange = verifier.getChallange();
           assert(
-            Math.round(challange.bitLength() / agreement.prime.bitLength()) === pMode.expectedComparation,
+            Math.round(challange.bitLength() / agreement.bitLength) === pMode.expectedComparation,
             `Invalid challange with ${challange.bitLength()} length`
           );
         });
@@ -62,19 +61,19 @@ pBits.map(async (p) => {
         it(`${p}bit - ${a} test - Client should be able to solve a challange given by verifier`, () => {
           solvedChallange = client.solveChallange(password, challange, a);
           assert(
-            Math.floor(solvedChallange.bitLength() / agreement.prime.bitLength()) === pMode.expectedComparation,
+            Math.floor(solvedChallange.bitLength() / agreement.bitLength) === pMode.expectedComparation,
             `Invalid solved value with ${solvedChallange.bitLength()} length`
           );
         });
 
         it(`${p}bit - ${a} test - Verifier should be able to verify in the case of right password`, () => {
-          const success = verifier.verifyChallange(solvedChallange, registrationValue, signInValue);
+          const success = verifier.verify(solvedChallange, registrationValue, signInValue);
           assert(success, 'Failed');
         });
 
         it(`${p}bit - ${a} test - Verification should fail in the case of wrong password`, async () => {
           solvedChallange = client.solveChallange('wrong-password', challange);
-          const success = verifier.verifyChallange(solvedChallange, registrationValue, signInValue);
+          const success = verifier.verify(solvedChallange, registrationValue, signInValue);
           assert(!success, 'Failed');
         });
       });
