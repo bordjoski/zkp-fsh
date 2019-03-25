@@ -2,25 +2,39 @@ import bigInt from 'big-integer';
 import Utils from './utils';
 
 class Agreement {
+  static get MIN_LENGTH() {
+    return 128;
+  }
   /**
    * Agreement to be used between Client and Verifier
    * @param {*} p Prime
    * @param {*} g Generator
    */
   constructor(p, g) {
-    this.prime = p;
-    this.generator = g;
+    this.prime = bigInt(p);
+    this.generator = bigInt(g);
   }
 
   get bitLength() {
-    return bigInt(this.prime).bitLength();
+    return this.prime.bitLength();
   }
 
   /**
    * Indicates if agreement is valid or not
    */
   get isValid() {
-    return bigInt(this.prime).isProbablePrime();
+    return this.prime.isProbablePrime() && this.bitLength >= Agreement.MIN_LENGTH;
+  }
+
+  toJSON() {
+    return {
+      prime: this.prime.toString(),
+      generator: this.generator.toString()
+    };
+  }
+
+  static fromJSON(value) {
+    return new Agreement(value.prime, value.generator);
   }
 
   /**

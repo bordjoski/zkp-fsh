@@ -4,6 +4,7 @@
 
 import bigInt from 'big-integer';
 import Utils from './utils';
+import Agreement from './agreement';
 
 /**
  * FSBase class is base class for Verifier and Client
@@ -28,8 +29,12 @@ class FSBase {
     this.prime = bigInt(agreement.prime);
     this.generator = bigInt(agreement.generator);
     this.power = power;
-    if (!this.prime.isProbablePrime()) throw new Error('Invalid prime.');
-    if (this.prime.bitLength() < 128) throw new Error('Prime must be at least 128bit');
+    if (!this.prime.isProbablePrime()) {
+      throw new Error('Invalid prime');
+    }
+    if (this.prime.bitLength() < Agreement.MIN_LENGTH) {
+      throw new Error(`Agreement must be initialized with at least ${Agreement.MIN_LENGTH}bit prime`);
+    }
   }
 
   /**

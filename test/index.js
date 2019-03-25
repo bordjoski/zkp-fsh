@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import bigInt from 'big-integer';
-import { Client, Verifier, Utils, Agreement } from '../src';
+import { Client, Verifier, Agreement } from '../src';
 
 let registrationValue;
 let signInValue;
@@ -28,7 +28,7 @@ pBits.map(async (p) => {
     describe(`${p}bit - Library test with power ${pMode.power ? 'on' : 'off'}`, () => {
       it(`${p}bit test - Should be able to generate valid prime`, async () => {
         agreement = await Agreement.generateAgreement(p);
-        assert(agreement.prime.isProbablePrime(), 'Invalid prime');
+        assert(agreement.isValid, 'Invalid agreement');
         assert(agreement.bitLength.eq(bigInt(p)), `Invalid prime size ${agreement.bitLength}/ Expected ${p}`);
       });
       algs.map(async (a) => {
