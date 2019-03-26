@@ -23,7 +23,7 @@ class Utils {
       };
       forge.prime.generateProbablePrime(bits, opts, (err, num) => {
         if (err) reject(err);
-        resolve(bigInt(num.toString()));
+        resolve(num);
       });
     });
   }
@@ -70,8 +70,8 @@ class Utils {
     return new Promise((resolve, reject) => {
       Utils.getPrime(bits).then((p) => {
         resolve({
-          prime: p,
-          generator: bigInt(2)
+          prime: p.toString(),
+          generator: 2
         });
       }).catch((e) => {
         reject(e);
