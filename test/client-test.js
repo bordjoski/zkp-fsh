@@ -13,7 +13,7 @@ describe('Client test', () => {
       } catch (e) {
         success = false;
       }
-      assert(success, 'Expected to succeed with valid agreement');
+      assert(success, `Expected to succeed with valid ${bitLength}bit agreement`);
     });
   });
   it('Should throw error when try to set agreement with bit length lesser than 128 bit', async () => {
@@ -26,7 +26,7 @@ describe('Client test', () => {
       } catch (e) {
         error = e;
       }
-      assert(error, 'Expected to fail with invalid bit length size');
+      assert(error, `Expected to fail with invalid bit length of ${bitLength} bits`);
     });
   });
   it('Should throw error when try to set agreement with non prime number', async () => {

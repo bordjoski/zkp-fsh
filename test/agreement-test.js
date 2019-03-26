@@ -8,27 +8,33 @@ describe('Agreement test', () => {
       assert(agreement.bitLength === bitLength, `Unexpected agreement bit length ${agreement.bitLength}. Expected ${bitLength}`);
     });
   });
-  it('Initialization of agreement from JSON should succeed with valid input', () => {
+  it('Initialization of agreement from JSON should succeed with corectly formated input', () => {
     const json = { prime: 101, generator: 2 };
     const agreement = Agreement.fromJSON(json);
-    assert(agreement, 'Failed');
+    assert(agreement, `Agreement should be correctly initialized with ${JSON.stringify(json)}`);
   });
   it('Initialization of agreement from JSON should fail with invalid input', () => {
+    const json = { p: 101, g: 2 };
+    let err;
     try {
-      const agreement = Agreement.fromJSON({ p: 101, g: 2 });
-      assert(agreement, 'Error expected');
-    } catch (e) { }
+      Agreement.fromJSON(json);
+    } catch (e) {
+      err = e;
+    }
+    assert(err, `Error expected with following input: ${JSON.stringify(json)}`);
   });
   it('Agreement should re-create from JSON', async () => {
-    Agreement.generateAgreement(256).then((agreement) => {
+    const bits = 256;
+    Agreement.generateAgreement(bits).then((agreement) => {
       const json = agreement.toJSON();
       const agreement2 = Agreement.fromJSON(json)
-      assert(agreement.prime.eq(agreement2.prime) && agreement.generator.eq(agreement2.generator), 'Invalid agreement bit length');
+      assert(agreement.prime.eq(agreement2.prime) && agreement.generator.eq(agreement2.generator), 'Agreement should re-create from given values');
     });
   });
   it('Agreement should be invalid in the case prime bit length is lesser than 128bit', async () => {
-    Agreement.generateAgreement(32).then((agreement) => {
-      assert(!agreement.isValid, 'Expected to be invalid agreement');
+    const bits = 32;
+    Agreement.generateAgreement(bits).then((agreement) => {
+      assert(!agreement.isValid, `Agreement expected to be invalid with ${bits}bit prime`);
     });
   });
   it('Agreement should be invalid in the case provided number is not prime number', async () => {
