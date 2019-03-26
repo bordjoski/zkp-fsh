@@ -16,6 +16,7 @@ describe('Client test', () => {
       assert(success, `Expected to succeed with valid ${bitLength}bit agreement`);
     });
   });
+
   it('Should throw error when try to set agreement with bit length lesser than 128 bit', async () => {
     const bitLength = 64;
     Agreement.generateAgreement(bitLength).then((agreement) => {
@@ -29,6 +30,7 @@ describe('Client test', () => {
       assert(error, `Expected to fail with invalid bit length of ${bitLength} bits`);
     });
   });
+
   it('Should throw error when try to set agreement with non prime number', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
@@ -43,68 +45,74 @@ describe('Client test', () => {
       assert(error, 'Expected to fail with non prime number');
     });
   });
-  it('Should throw error during calculation of registration value where agreement is required but not provided previously', () => {
+
+  it('Should throw error during calculation of secret value where agreement is required but not provided previously', () => {
     const client = new Client();
     let error;
     try {
-      client.getRegistration('password');
+      client.getSecret('password');
     } catch (e) {
       error = e;
     }
     assert(error, 'Expected error');
   });
-  it('Should throw error during calculation of sign in value where agreement is required but not provided previously', () => {
+
+  it('Should throw error during calculation of claim where agreement is required but not provided previously', () => {
     const client = new Client();
     let error;
     try {
-      client.getSignIn();
+      client.getClaim();
     } catch (e) {
       error = e;
     }
     assert(error, 'Expected error');
   });
-  it('Should throw error when try to solve a challange but sign in process was not initialized first', () => {
+
+  it('Should throw error when try to get a proof but verification process was not initialized first', () => {
     const client = new Client();
     let error;
     try {
-      client.solveChallange('password', 'c');
+      client.getProof('proofRequest', 'password');
     } catch (e) {
       error = e;
     }
     assert(error, 'Expected error');
   });
-  it('Should calculate valid registration value in the case of valid agreement', async () => {
+
+  it('Should calculate valid secret in the case of valid agreement', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const client = new Client(agreement);
-      const regVal = client.getRegistration('password');
+      const secret = client.getSecret('password');
       assert(
-        Math.round(agreement.bitLength / regVal.bitLength()) === 1,
-        `Unecpected registration value with ${regVal.bitLength()} lentgh`
+        Math.round(agreement.bitLength / secret.bitLength()) === 1,
+        `Unecpected secret with ${secret.bitLength()} lentgh`
       );
     });
   });
-  it('Should calculate valid signin value in the case of valid agreement', async () => {
+
+  it('Should calculate valid claim in the case of valid agreement', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const client = new Client(agreement);
-      const sigVal = client.getSignIn();
+      const claim = client.getClaim();
       assert(
-        Math.round(agreement.bitLength / sigVal.bitLength()) === 1,
-        `Unecpected signin value with ${sigVal.bitLength()} lentgh`
+        Math.round(agreement.bitLength / claim.bitLength()) === 1,
+        `Unecpected claim with ${claim.bitLength()} lentgh`
       );
     });
   });
-  it('Should be able to produce valid challange response', async () => {
+
+  it('Should be able to produce valid proof', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const client = new Client(agreement);
       const verifier = new Verifier(agreement);
-      const sigVal = client.getSignIn();
-      const challange = verifier.getChallange();
-      const proof = client.solveChallange('password', challange);
+      const claim = client.getClaim();
+      const proofRequest = verifier.getProofRequest();
+      const proof = client.getProof(proofRequest, 'password');
       assert(
-        Math.floor(proof.bitLength() / agreement.bitLength) === 8,
+        Math.floor(proof.bitLength() / agreement.bitLength) === Math.floor(8 * agreement.strength),
         `Invalid solved value with ${proof.bitLength()} length`
       );
     });

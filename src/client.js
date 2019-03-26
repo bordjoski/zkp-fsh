@@ -7,52 +7,57 @@ import FSBase from './fsbase';
 import Utils from './utils';
 
 /**
- * Client class is responsible for:
- * 1. calculation of registration value
- * 2. calculation of sign in value
- * 3. solving a challange given by verifier
+ * Client class represents subject of verification.
+ * Client should never share verification process identifier or a password
  */
 class Client extends FSBase {
   /**
-   * Calculate value to be used for registration purpose.
-   * @param {String} password Choosen password
+   * Acceptable message digest algorithms
    */
-  getRegistration(password, md = 'md5') {
+  static get ACCEPTABLE_ALGORITHMS() {
+    return {
+      md5: 'md5',
+      sha1: 'sha1',
+      sha256: 'sha256',
+      sha384: 'sha384',
+      sha512: 'sha512'
+    };
+  }
+
+  /**
+   * Get secret for registration purposes
+   * @param {String} password Password
+   * @param {String} algorithm message-digest algorithm
+   */
+  getSecret(password, algorithm = 'md5') {
     if (!this.agreement) throw new Error('Agreement is required');
-    const x = this.calculateSecret(password, md);
+    if (!Client.ACCEPTABLE_ALGORITHMS[algorithm]) {
+      const supported = Object.keys(Client.ACCEPTABLE_ALGORITHMS).toString();
+      throw new Error(`Unsuported algorithm ${algorithm}. Supported message digest algorithms are: ${supported}`);
+    }
+    const x = Utils.fromPassword(password, algorithm).mod(this.agreement.prime);
     return this.agreement.generator.modPow(x, this.agreement.prime);
   }
 
   /**
-   * Get value for initialization of verification process.
+   * Get claim for verification process
    */
-  getSignIn() {
-    this.random = this.generateRandom();
-    return this.agreement.generator.modPow(this.random, this.agreement.prime);
+  getClaim() {
+    if (!this.agreement) throw new Error('Agreement is required');
+    this.verificationProcessId = Utils.generateVerificationProcessId(this.agreement);
+    return this.agreement.generator.modPow(this.verificationProcessId, this.agreement.prime);
   }
 
   /**
-   * Solves a challange given by verifier - gets a proof.
-   * @param {String} password Choosen password
-   * @param {*} challange Random number given by verifier
+   * Get proof of knowladge.
+   * @param {*} proofRequest Proof request given by Verifier
+   * @param {String} password Password
+   * @param {String} algorithm message-digest algorithm
    */
-  solveChallange(password, challange, md = 'md5') {
-    if (!this.random) throw new Error('Verification process not initialized');
-    const x = this.calculateSecret(password, md);
-    return this.random.minus(bigInt(challange).multiply(x));
-  }
-
-  /**
-   * Calculate the secret based on password and prime number.
-   * @param {String} password Choosen password
-   * @private
-   */
-  calculateSecret(password, md) {
-    if (!FSBase.ACCEPTABLE_DIGEST[md]) {
-      const supported = Object.keys(FSBase.ACCEPTABLE_DIGEST).toString();
-      throw new Error(`Unsuported ${md}. Supported message digest are: ${supported}`);
-    }
-    return Utils.fromPassword(password, md).mod(this.agreement.prime);
+  getProof(proofRequest, password, algorithm = 'md5') {
+    if (!this.verificationProcessId) throw new Error('Verification process not initialized');
+    const x = Utils.fromPassword(password, algorithm).mod(this.agreement.prime);
+    return this.verificationProcessId.minus(bigInt(proofRequest).multiply(x));
   }
 }
 

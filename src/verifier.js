@@ -4,69 +4,82 @@
  */
 
 import bigInt from 'big-integer';
-import math from 'mathjs';
 import FSBase from './fsbase';
+import Utils from './utils';
 
 /**
- * Verifier class exposes a method enabling verifier to verify solved challange
+ * Verifier class represents a verifier.
+ * Exposes public methods for generating proof request and verification of the proof.
  */
 class Verifier extends FSBase {
   /**
-   * Verifies proof provided by initiator of verification process.
-   * @param {*} c Solved challange value
-   * @param {*} r Value used in registration process
-   * @param {*} s Value provided by initiator in sign in process
-   * @param {*} q Challange given to the Client.
+   * @param {Agreement} agreement Agreement made between Client and Verifier
+   * @param {*} verificationProcessId Optional. Proof request given to the Client
    */
-  verify(c, r, s, q) {
+  constructor(agreement, verificationProcessId) {
+    super(agreement);
+    if (verificationProcessId) {
+      this.verificationProcessId = bigInt(verificationProcessId);
+    }
+  }
+
+  /**
+   * Generates proof request for the Client.
+   */
+  getProofRequest() {
     if (!this.agreement) throw new Error('Agreement is required');
-    if (q) this.random = bigInt(q);
-    const bc = bigInt(c);
-    const n = bigInt(r).modPow(this.random, this.agreement.prime);
-    const m = bc.isNegative()
-      ? this.inverseOf(
-        this.agreement.generator.modPow(bc.times(bigInt(-1)), this.agreement.prime),
+    this.verificationProcessId = Utils.generateVerificationProcessId(this.agreement);
+    return this.verificationProcessId;
+  }
+
+  /**
+   * Verifies the proof provided by Client
+   * @param {*} claim Claim provided by Client
+   * @param {*} proof Proof provided by Client
+   * @param {*} secret Secret provided by Client
+   */
+  verify(claim, proof, secret) {
+    if (!this.agreement) throw new Error('Agreement is required');
+    if (!this.verificationProcessId) throw new Error('Verification process not initialized');
+
+    this.setClaim(claim);
+    this.setProof(proof);
+    this.setSecret(secret);
+
+    const n = this.secret.modPow(this.verificationProcessId, this.agreement.prime);
+    const m = this.proof.isNegative()
+      ? Utils.inverseOf(
+        this.agreement.generator.modPow(this.proof.times(bigInt(-1)), this.agreement.prime),
         this.agreement.prime
       )
-      : this.agreement.generator.modPow(bc, this.agreement.prime);
-
+      : this.agreement.generator.modPow(this.proof, this.agreement.prime);
     const mn = m.times(n);
-    const v = mn.mod(this.agreement.prime);
-    return bigInt(s).eq(v);
+    const verificationResult = mn.mod(this.agreement.prime);
+    return this.claim.eq(verificationResult);
   }
 
   /**
-   * If challange result is negative number, compute the inverse mod of it -
-   * determinated by extended euclidean algorithm
-   * @param {Integer} n g**-challangeResult % p
-   * @param {Integer} p Prime number
-   * @private
+   * Set claim
+   * @param {*} claim Claim provided by Client
    */
-  // eslint-disable-next-line class-methods-use-this
-  inverseOf(n, p) {
-    math.config({
-      number: 'BigNumber',
-      precision: Math.floor(this.agreement.bitLength * 0.33)
-    });
-
-    const r = math.xgcd(
-      math.bignumber(n.toString()),
-      math.bignumber(p.toString())
-    );
-
-    const x = bigInt(r._data[1].toString());
-    // In case r._data[1] is negative, add extra p
-    // since multiplicative inverse of A in range p lies in the range [0, p-1]
-    const xp = x.isNegative() ? x.plus(p) : x;
-    return xp.mod(p);
+  setClaim(claim) {
+    this.claim = bigInt(claim);
   }
 
   /**
-   * Get a challange for client.
+   * Set proof
+   * @param {} proof Proof provided by Client.
    */
-  getChallange() {
-    this.random = this.generateRandom();
-    return this.random;
+  setProof(proof) {
+    this.proof = bigInt(proof);
+  }
+
+  /**
+   * Set secret
+   * @param {*} secret Secret provided by Client
+   */
+  setSecret(secret) {
+    this.secret = bigInt(secret);
   }
 }
 
