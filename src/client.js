@@ -40,24 +40,24 @@ class Client extends FSBase {
   }
 
   /**
-   * Get claim for verification process
+   * Get claim
    */
   getClaim() {
     if (!this.agreement) throw new Error('Agreement is required');
-    this.verificationProcessId = Utils.generateVerificationProcessId(this.agreement);
-    return this.agreement.generator.modPow(this.verificationProcessId, this.agreement.prime);
+    this.authenticationProcessId = Utils.generateAuthenticationProcessId(this.agreement);
+    return this.agreement.generator.modPow(this.authenticationProcessId, this.agreement.prime);
   }
 
   /**
-   * Get proof of knowladge.
+   * Get proof
    * @param {*} proofRequest Proof request given by Verifier
    * @param {String} password Password
    * @param {String} algorithm message-digest algorithm
    */
   getProof(proofRequest, password, algorithm = 'md5') {
-    if (!this.verificationProcessId) throw new Error('Verification process not initialized');
+    if (!this.authenticationProcessId) throw new Error('Authentication process not initialized');
     const x = Utils.fromPassword(password, algorithm).mod(this.agreement.prime);
-    return this.verificationProcessId.minus(bigInt(proofRequest).multiply(x));
+    return this.authenticationProcessId.minus(bigInt(proofRequest).multiply(x));
   }
 }
 

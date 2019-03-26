@@ -17,27 +17,28 @@ In the case password based authentication system is required, it is worth consid
 
 #### Registration process:
 
-1. Client and Verifier agree on agreement object to be used (which by default uses 1024bit prime number)\
-`const agreement = await zkpfsh.Agreement.generateAgreement(1024);`\
+1. Client and Verifier makes agreement (which by default uses 1024-bit prime number)\
+`const agreement = await zkpfsh.Agreement.generateAgreement();`\
+
 `const client = new zkpfsh.Client(agreement);`\
 `const verifier = new zkpfsh.Verifier(agreement);`
 
-2. Client calculates registration value based on provided agreement and password value and sends result to Verifier.\
-`const registrationValue = client.getRegistration('password');`
+2. Client calculates a secret based on provided agreement and password and sends result to Verifier.\
+`const secret = client.getSecret('password');`
 
-#### Sign in proccess:
+#### Authentication proccess:
 
-1. Client calculates sign in value based on agreement and sends it to Verifier\
-`const signInValue = client.getSignIn();`
+1. Client provides a claim - value based on agreement and internal authentication process identifier and sends it to Verifier\
+`const claim = client.getClaim();`
 
-2. Verifier generates a challange\
-`const challange = verifier.getChallange();`
+2. Verifier generates a proof request and sends it to the client\
+`const proofRequest = verifier.getProofRequest();`
 
-3. Client calculates a challange result (proof) and sends result back to Verifier\
-`const proof = client.solveChallange('password', challange);`
+3. Client calculates a proof based on recieved proof request and sends result back to Verifier\
+`const proof = client.getProof(proofRequest, 'password');`
 
-4. Verifier calculates if result is correct\
-`const success = verifier.verify(proof, registrationValue, signInValue);`
+4. Verifier tries to verify a claim\
+`const success = verifier.verify(claim, proof, secret);`
 
 5. Client has prooven to know a password
 

@@ -22,7 +22,7 @@ class Agreement {
   /**
    * Generate new agreement
    * @param {Number} bits bit length of prime number used in agreement
-   * @param {Number} strength Strength of agreement. Possible values are in range 1 - 2
+   * @param {Number} strength Strength of agreement. Allowed values are in range 1 - 2
    */
   static async generateAgreement(bits = 1024, strength = 1) {
     return new Promise((resolve, reject) => {
@@ -48,7 +48,7 @@ class Agreement {
    * Agreement to be used between Client and Verifier
    * @param {*} prime Prime number
    * @param {*} generator Generator
-   * @param {Number} strength Strength of Agreement. Possible values are in range 1 - 2
+   * @param {Number} strength Strength of Agreement. Allowed values are in range 1 - 2
    */
   constructor(prime, generator, strength = 1) {
     if (strength < 1 || strength > Agreement.MAX_STRENGTH) {

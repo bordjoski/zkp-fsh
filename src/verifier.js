@@ -14,12 +14,12 @@ import Utils from './utils';
 class Verifier extends FSBase {
   /**
    * @param {Agreement} agreement Agreement made between Client and Verifier
-   * @param {*} verificationProcessId Optional. Proof request given to the Client
+   * @param {*} authenticationProcessId Optional. Proof request given to the Client
    */
-  constructor(agreement, verificationProcessId) {
+  constructor(agreement, authenticationProcessId) {
     super(agreement);
-    if (verificationProcessId) {
-      this.verificationProcessId = bigInt(verificationProcessId);
+    if (authenticationProcessId) {
+      this.authenticationProcessId = bigInt(authenticationProcessId);
     }
   }
 
@@ -28,8 +28,8 @@ class Verifier extends FSBase {
    */
   getProofRequest() {
     if (!this.agreement) throw new Error('Agreement is required');
-    this.verificationProcessId = Utils.generateVerificationProcessId(this.agreement);
-    return this.verificationProcessId;
+    this.authenticationProcessId = Utils.generateAuthenticationProcessId(this.agreement);
+    return this.authenticationProcessId;
   }
 
   /**
@@ -40,13 +40,13 @@ class Verifier extends FSBase {
    */
   verify(claim, proof, secret) {
     if (!this.agreement) throw new Error('Agreement is required');
-    if (!this.verificationProcessId) throw new Error('Verification process not initialized');
+    if (!this.authenticationProcessId) throw new Error('Authentication process not initialized');
 
     this.setClaim(claim);
     this.setProof(proof);
     this.setSecret(secret);
 
-    const n = this.secret.modPow(this.verificationProcessId, this.agreement.prime);
+    const n = this.secret.modPow(this.authenticationProcessId, this.agreement.prime);
     const m = this.proof.isNegative()
       ? Utils.inverseOf(
         this.agreement.generator.modPow(this.proof.times(bigInt(-1)), this.agreement.prime),
