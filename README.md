@@ -38,7 +38,7 @@ In the case password based authentication system is required, it is worth consid
 `const proof = client.getProof(proofRequest, 'password');`
 
 4. Verifier tries to verify a claim\
-`const success = verifier.verify(claim, proof, secret);`
+`const success = verifier.verify(proof, claim, secret);`
 
 5. Client has prooven to know a password
 

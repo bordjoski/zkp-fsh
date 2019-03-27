@@ -44,8 +44,8 @@ class Client extends FSBase {
    */
   getClaim() {
     if (!this.agreement) throw new Error('Agreement is required');
-    this.authenticationProcessId = Utils.generateAuthenticationProcessId(this.agreement);
-    return this.agreement.generator.modPow(this.authenticationProcessId, this.agreement.prime);
+    this.authProcessId = Utils.generateAuthProcessId(this.agreement);
+    return this.agreement.generator.modPow(this.authProcessId, this.agreement.prime);
   }
 
   /**
@@ -55,9 +55,9 @@ class Client extends FSBase {
    * @param {String} algorithm message-digest algorithm
    */
   getProof(proofRequest, password, algorithm = 'md5') {
-    if (!this.authenticationProcessId) throw new Error('Authentication process not initialized');
+    if (!this.authProcessId) throw new Error('Authentication process not initialized');
     const x = Utils.fromPassword(password, algorithm).mod(this.agreement.prime);
-    return this.authenticationProcessId.minus(bigInt(proofRequest).multiply(x));
+    return this.authProcessId.minus(bigInt(proofRequest).multiply(x));
   }
 }
 

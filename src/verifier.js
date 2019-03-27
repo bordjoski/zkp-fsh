@@ -19,7 +19,7 @@ class Verifier extends FSBase {
   constructor(agreement, authenticationProcessId) {
     super(agreement);
     if (authenticationProcessId) {
-      this.authenticationProcessId = bigInt(authenticationProcessId);
+      this.authProcessId = bigInt(authenticationProcessId);
     }
   }
 
@@ -28,25 +28,27 @@ class Verifier extends FSBase {
    */
   getProofRequest() {
     if (!this.agreement) throw new Error('Agreement is required');
-    this.authenticationProcessId = Utils.generateAuthenticationProcessId(this.agreement);
-    return this.authenticationProcessId;
+    this.authProcessId = Utils.generateAuthProcessId(this.agreement);
+    return this.authProcessId;
   }
 
   /**
    * Verifies the proof provided by Client
-   * @param {*} claim Claim provided by Client
    * @param {*} proof Proof provided by Client
+   * @param {*} claim Claim provided by Client
    * @param {*} secret Secret provided by Client
    */
-  verify(claim, proof, secret) {
-    if (!this.agreement) throw new Error('Agreement is required');
-    if (!this.authenticationProcessId) throw new Error('Authentication process not initialized');
-
-    this.setClaim(claim);
+  verify(proof, claim, secret) {
     this.setProof(proof);
-    this.setSecret(secret);
+    if (claim) this.setClaim(claim);
+    if (secret) this.setSecret(secret);
 
-    const n = this.secret.modPow(this.authenticationProcessId, this.agreement.prime);
+    if (!this.agreement) throw new Error('Verification Error: Agreement is required');
+    if (!this.authProcessId) throw new Error('Verification Error: Authentication process not initialized');
+    if (!this.secret) throw new Error('Verification Error: Missing the secret');
+    if (!this.claim) throw new Error('Verification Error: Missing the claim');
+
+    const n = this.secret.modPow(this.authProcessId, this.agreement.prime);
     const m = this.proof.isNegative()
       ? Utils.inverseOf(
         this.agreement.generator.modPow(this.proof.times(bigInt(-1)), this.agreement.prime),

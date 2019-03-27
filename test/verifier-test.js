@@ -26,8 +26,8 @@ describe('Verifier test', () => {
       const proofReq = verifier.getProofRequest();
       const proof = client.getProof(proofReq, password);
       const success = verifier.verify(
-        claim,
         proof,
+        claim,
         secret
       );
       assert(success, 'Should be able to verify');
@@ -46,8 +46,8 @@ describe('Verifier test', () => {
       const proofReq = verifier.getProofRequest();
       const proof = client.getProof(proofReq, password);
       const success = verifier.verify(
-        claim,
         proof,
+        claim,
         secret
       );
       assert(success, 'Should fail to verify');

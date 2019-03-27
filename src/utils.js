@@ -106,7 +106,7 @@ class Utils {
   /**
    * Generate authentication process identifier.
    */
-  static generateAuthenticationProcessId(agreement) {
+  static generateAuthProcessId(agreement) {
     const bits = Math.floor(agreement.bitLength * agreement.strength);
     return Utils.getRandomSync(bits);
   }
