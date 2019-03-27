@@ -1,6 +1,6 @@
 # zkp-fish
 
-##### Upcoming breaking changes - please check dev branch
+#### Upcoming breaking changes - please check dev branch
 
 #### The library is made as a proof of concept only and it was not reviewed by anyone. Part of learning curve and not ment to be used in production enviroment.
 
