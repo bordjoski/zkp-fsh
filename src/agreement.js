@@ -50,18 +50,17 @@ class Agreement {
 
   /**
    * Deserialize an instance of type Agreement from JSON
-   * @param {Object} value
-   * @param base Base. Optional base parameter (which defaults to 10).
-   * @param alphabet Alphabet to be used
+   * @param {Object} json Serialized agreement
+   * @param {Config} config. Optional configuration parameter with specified based and alphabet
    */
-  static fromJSON(json, base, alphabet) {
+  static fromJSON(json, config) {
     const {
       prime,
       generator,
       strength
     } = json;
     if (!prime || !generator) throw new Error('Invalid input');
-    return new Agreement(prime, generator, strength, base, alphabet);
+    return new Agreement(prime, generator, strength, config || {});
   }
 
   /**
@@ -69,11 +68,11 @@ class Agreement {
    * @param {String | Number} prime Prime number
    * @param {Number} generator Generator
    * @param {Number} strength Strength of Agreement. Allowed values are in range 1 - 2
-   * @param {Number} base Optional base/radix parameter (which defaults to 10)
-   * @param {alphabet} alphabet Alphabet to be used during conversion process
+   * @param {Object} config Optional configuration. Defines base (which defaults to 10)
+   * and alphabet to be used during conversion process
    */
-  constructor(prime, generator, strength, base, alphabet) {
-    this.configure(base, alphabet);
+  constructor(prime, generator, strength, config = {}) {
+    this.configure(config);
     try {
       this.prime = bigInt(prime, this.base, this.alphabet, true);
     } catch (e) {
@@ -86,9 +85,9 @@ class Agreement {
     }
   }
 
-  configure(base, alphabet) {
-    this.alphabet = alphabet || Agreement.DEFAULT_ALPHABET;
-    this.base = base || Agreement.DEFAULT_BASE;
+  configure(config) {
+    this.alphabet = config.alphabet || Agreement.DEFAULT_ALPHABET;
+    this.base = config.base || Agreement.DEFAULT_BASE;
   }
 
   /**

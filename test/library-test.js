@@ -22,7 +22,7 @@ pBits.map(async (p) => {
     describe(`${p}-bit agreement test with strength ${strength}`, () => {
       it(`${p}-bit - Should be able to generate valid agreement with given bit length`, async () => {
         agreement = await Agreement.generateAgreement(p, strength);
-        agreement.configure(10, Agreement.DEFAULT_ALPHABET);
+        agreement.configure({ base: 10, alphabet: Agreement.DEFAULT_ALPHABET });
         assert(agreement.isValid, 'Invalid agreement');
         assert(agreement.bitLength === p, `Invalid prime size ${agreement.bitLength}. Expected ${p}`);
       });

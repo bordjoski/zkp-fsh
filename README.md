@@ -52,12 +52,15 @@ Note that Agreement can be initialized from serialized data produced with `agree
 `const serialized = agreement.toJSON();`\
 `const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized);`
 
-Optionaly, agreement can be configured to use custom base/radix and alphabet during conversion process. Default base is `10` and default alphabet is `0123456789abcdefghijklmnopqrstuvwxyz`. If used, configuration must be done manualy both on Client and Verifier side to be able to deserialize data. Configuration details is not included in serialized Agreement. For example:
+Optionaly, agreement can be configured to use custom base/radix and alphabet during conversion process. Default base is `10` and default alphabet is `0123456789abcdefghijklmnopqrstuvwxyz`.\
+If used, configuration must be done manualy both on Client and Verifier side to be able to deserialize data.\
+Configuration details is not included in serialized Agreement. For example:
 
 `const agreement = await zkpfsh.Agreement.generateAgreement();`\
-`agreement.configure(2, '#%');`\
+`const config = { base: 2, alphabet: '#%' };`\
+`agreement.configure(config);`\
 `const serialized = agreement.toJSON();`\
-`const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized, 2, '#%');`
+`const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized, config);`
 
 By doing this, all data produced by Client or Verifier will use the same base and alphabet.
 
