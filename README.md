@@ -19,8 +19,8 @@ In the case password based authentication system is required, it is worth consid
 
 1. Define agreement (which by default uses 1024-bit prime number) and has default strength 1\
 `const agreement = await zkpfsh.Agreement.generateAgreement();`\
-If you would like to generate agreement with 512-bit prime number and strength 2:\
-`const agreement = await zkpfsh.Agreement.generateAgreement(512, 2);`\
+If you would like to generate agreement with 512-bit prime number and strength 1.5:\
+`const agreement = await zkpfsh.Agreement.generateAgreement(512, 1.5);`\
 Strength can be in range 1 - 2 and it affects size of proof (produced by Client) and size of proof request (produced by Verifier)
 
 2. Make agreement between Client and Verifier\
@@ -32,7 +32,7 @@ Strength can be in range 1 - 2 and it affects size of proof (produced by Client)
 
 #### Authentication proccess:
 
-1. Client provides a claim - value based on agreement and internal authentication process identifier and sends it to Verifier\
+1. Client provides a claim to Verifier - value based on agreement and internal authentication process identifier (random number) and sends it to Verifier\
 `const claim = client.getClaim();`
 
 2. Verifier generates a proof request and sends it to the client\
@@ -53,7 +53,7 @@ Note that Agreement can be initialized from serialized data produced with `agree
 `const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized);`
 
 Optionaly, agreement can be configured to use custom base/radix and alphabet during conversion process. Default base is `10` and default alphabet is `0123456789abcdefghijklmnopqrstuvwxyz`.\
-If used, configuration must be done manualy both on Client and Verifier side to be able to deserialize data.\
+If used, configuration must be done manualy both on Client and Verifier side and must be identical to be able to deserialize data.\
 Configuration details is not included in serialized Agreement. For example:
 
 `const agreement = await zkpfsh.Agreement.generateAgreement();`\
@@ -62,7 +62,7 @@ Configuration details is not included in serialized Agreement. For example:
 `const serialized = agreement.toJSON();`\
 `const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized, config);`
 
-By doing this, all data produced by Client or Verifier will use the same base and alphabet.
+By doing this, all data produced by Client or Verifier will use same base and alphabet.
 
 
 ### References, Credits and Links
