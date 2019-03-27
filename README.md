@@ -1,7 +1,7 @@
 # zkp-fish
 
-#### The library is made as a proof of concept only and it was not reviewed by anyone. Part of learning curve and not ment to be used in production enviroment.
-
+#### Developed as proof of concept only and not reviewed by anyone. Part of learning curve and not ment to be used in production enviroment!
+#
 Helper methods enabling authentication without compromising the password and without shared or public keys.\
 Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heuristic.
 
