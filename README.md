@@ -21,7 +21,7 @@ In the case password based authentication system is required, it is worth consid
 `const agreement = await zkpfsh.Agreement.generateAgreement();`\
 If agreement with 512-bit prime number and strength 1.5 is required:\
 `const agreement = await zkpfsh.Agreement.generateAgreement(512, 1.5);`\
-Strength can be in range 1 - 2 and it affects size of proof (produced by Client) and size of proof request (produced by Verifier)
+Strength can be in range 1 - 2 and it affects size of the proof (produced by Client) and size of the proof request (produced by Verifier), meaning that bit length of the proof in the case of Client (or bit length of the proof request in the case of Verifier) devided by bit length of agreement is equal to given strength multiplied by 8
 
 2. Make agreement between Client and Verifier\
 `const client = new zkpfsh.Client(agreement);`\
