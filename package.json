@@ -1,6 +1,6 @@
 {
   "name": "zkp-fish",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Proof of concept library and helper methods enabling user to authenticate without compromising the password and without shared or public keys. Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heruistic",
   "main": "./lib/index.js",
   "scripts": {

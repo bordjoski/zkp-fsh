@@ -71,10 +71,9 @@ Example:\
 `const config = { base: 2, alphabet: '#%' };`\
 `agreement.configure(config);`
 
-Or when re-creating agreement from JSON:
+Instance of agreement from JSON:
 
-`const serialized = agreement.toJSON();`\
-`const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized, config);`
+`const agreement = zkpfsh.Agreement.fromJSON(serialized, config);`
 
 By doing this, all data produced by Client or Verifier will use same custom base and alphabet.\
 To simply, when using 128-bit agreement with strenght 1 and with default configuration (base `10` and alphabet `Agreement.DEFAULT_ALPHABET`), Client produces following proof:
@@ -86,7 +85,7 @@ On the other hand, when provided configuration is defined as `{ base: 2, alphabe
 `-%#%###%%#%%###%%##%%##%#%%%###%%%%%##%%%%#%%#%%##%##%#%#%##%#%%#%%%##%#%######%#%%#%%%%%%##%######%%%%####%%##%####%%##%%%%%%%#%####%#######%%%##%%#%%##%#####%%%##%#%##%%%##%%%%%#%%%##%%%###%##%##%%#%%#%##%%#%#%%%%##%##%###%#%%%%##%%%#%%%%##%#%%%###%%%%%###%####%%%%##%%#%##%#%%%%%##%##%#%%##%%%#%%%####%#%#%%%%##%%#%####%#%#%##%#%#%#%%%######%###%%#%###%#%%%#%##%%%%%##%%%#%#%#%#%%%##%##%#%###%%%%#%###%#%#%%###%%%#%%###%%%%%#%%##%####%%%#%##%###%##%%##%%%#%##%%%%%####%%##%#%#%#%%%%%%######%####%%%##%#%%#%#%#%%%%%%#%#%%%#%%%#%%%%##%%#%#%%##%%%%#%%#%####%%%##%##%%%%#####%#%#%%####%##%%##%###%%##%%%#%%##%%######%%######%%#%%%%#%%##%##%%###%%%#%###%%#%%#%%##%%#%%%##%%#%####%#%#%##%%%#%%##%%#%#%#%%#%##%%#%%#####%##%%%%%%%###%%#%#%%#%%%######%##%##%%%%%#%%%%%#%##%#####%%%%%%#%#%#%#%#%##%%#######%%%%##%%###%##%#%#%%####%#%%%%%##%%%#%%%####%###%#%#%######%%%##%####%%%#%%#####%%%%#%#%%#%%##%##%#%#%####%#%%%#%%%%###%%%###%######%###%#%%%#%%%###%##%%%%#%#%%%%#%#%#%#%#%#%###%#%#####%%#%##%%%###%%#%%%####%%%#%%%######%%%%%#%%#%##%####%%%#%#%##%%%%##%#%#%#`
 
 In the both cases, proof has valid format as long as the same configuration is used by Client and Verifier.\
-This is optional as it does not improoves security much but it comes handy when custom outputs are desired.
+This is optional as it does not improove security much but it comes handy if custom outputs are desired.
 
 #### Runing the tests
 
