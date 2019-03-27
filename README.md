@@ -17,22 +17,19 @@ In the case password based authentication system is required, it is worth consid
 
 #### Registration process:
 
-1. Define agreement (which by default uses 1024-bit prime number) and has default strength 1\
-`const agreement = await zkpfsh.Agreement.generateAgreement();`\
-If agreement with 512-bit prime number and strength 1.5 is required:\
-`const agreement = await zkpfsh.Agreement.generateAgreement(512, 1.5);`\
-Strength can be in range 1 - 2 and it affects size of the proof (produced by Client) and size of the proof request (produced by Verifier), meaning that bit length of the proof in the case of Client (or bit length of the proof request in the case of Verifier) devided by bit length of agreement is equal to given strength multiplied by 8
+1. Generate agreement\
+`const agreement = await zkpfsh.Agreement.generateAgreement();`
 
 2. Make agreement between Client and Verifier\
 `const client = new zkpfsh.Client(agreement);`\
 `const verifier = new zkpfsh.Verifier(agreement);`
 
-3. Client calculates a secret based on provided agreement and password and sends result to Verifier.\
+3. Client calculates a secret based on provided agreement and password and sends result to Verifier to store.\
 `const secret = client.getSecret('password');`
 
 #### Authentication proccess:
 
-1. Client provides a claim to Verifier - value based on agreement and internal authentication process identifier (random number) and sends it to Verifier\
+1. Client provides a claim to Verifier'\
 `const claim = client.getClaim();`
 
 2. Verifier generates a proof request and sends it to the client\
@@ -48,6 +45,14 @@ Strength can be in range 1 - 2 and it affects size of the proof (produced by Cli
 
 #### Agreement configuration
 
+Agreement is valid when generated with at least 128-bit prime number.\
+By default it uses 1024-bit prime number and has default strength 1.
+
+Example of initialization of agreement with 512-bit prime number and strength 1.5:\
+`const agreement = await zkpfsh.Agreement.generateAgreement(512, 1.5);`
+
+Strength can be in range 1 - 2 and it affects size of the proof (produced by Client) and size of the proof request (produced by Verifier), meaning that bit length of the proof in the case of Client (or bit length of the proof request in the case of Verifier) devided by bit length of agreement is equal to given strength multiplied by 8
+
 Agreement can be re-creacted from serialized data produced with `agreement.toJSON()` as follows:
 
 `const agreement = await zkpfsh.Agreement.generateAgreement();`\
@@ -56,9 +61,9 @@ Agreement can be re-creacted from serialized data produced with `agreement.toJSO
 
 Optionaly, agreement can be configured to use custom base and alphabet during conversion process. Default base is `10` and default alphabet is `0123456789abcdefghijklmnopqrstuvwxyz`.\
 If used, configuration must be done manualy both on Client and Verifier side and must be identical to be able to deserialize data.\
-Configuration details is not included in serialized Agreement.\
-Example:
+Configuration details are not included in serialized Agreement.
 
+Example:\
 `const agreement = await zkpfsh.Agreement.generateAgreement();`\
 `const config = { base: 2, alphabet: '#%' };`\
 `agreement.configure(config);`
@@ -68,8 +73,24 @@ Or when re-creating agreement from JSON:
 `const serialized = agreement.toJSON();`\
 `const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized, config);`
 
-By doing this, all data produced by Client or Verifier will use same base and alphabet.
+By doing this, all data produced by Client or Verifier will use same custom base and alphabet.\
+To clarify, when using 128-bit agreement with strenght 1 and with default configuration (base `10` and alphabet `Agreement.DEFAULT_ALPHABET`), Client produces following proof:
 
+`-200345974380536291602725340614948917409816195203413245753080625006499251713236934863588294738934992481943703364096134422837307179750837285113724140690445009756433154598234359420111126539059118282952710603288623794827633859198317004414338157411479955408393374957865885795838352968784319613283799204152403428463482437731`
+
+On the other hand, when provided configuration is defined as `{ base: 2, alphabet: '#%' }`, proof would look like:
+
+`-%#%###%%#%%###%%##%%##%#%%%###%%%%%##%%%%#%%#%%##%##%#%#%##%#%%#%%%##%#%######%#%%#%%%%%%##%######%%%%####%%##%####%%##%%%%%%%#%####%#######%%%##%%#%%##%#####%%%##%#%##%%%##%%%%%#%%%##%%%###%##%##%%#%%#%##%%#%#%%%%##%##%###%#%%%%##%%%#%%%%##%#%%%###%%%%%###%####%%%%##%%#%##%#%%%%%##%##%#%%##%%%#%%%####%#%#%%%%##%%#%####%#%#%##%#%#%#%%%######%###%%#%###%#%%%#%##%%%%%##%%%#%#%#%#%%%##%##%#%###%%%%#%###%#%#%%###%%%#%%###%%%%%#%%##%####%%%#%##%###%##%%##%%%#%##%%%%%####%%##%#%#%#%%%%%%######%####%%%##%#%%#%#%#%%%%%%#%#%%%#%%%#%%%%##%%#%#%%##%%%%#%%#%####%%%##%##%%%%#####%#%#%%####%##%%##%###%%##%%%#%%##%%######%%######%%#%%%%#%%##%##%%###%%%#%###%%#%%#%%##%%#%%%##%%#%####%#%#%##%%%#%%##%%#%#%#%%#%##%%#%%#####%##%%%%%%%###%%#%#%%#%%%######%##%##%%%%%#%%%%%#%##%#####%%%%%%#%#%#%#%#%##%%#######%%%%##%%###%##%#%#%%####%#%%%%%##%%%#%%%####%###%#%#%######%%%##%####%%%#%%#####%%%%#%#%%#%%##%##%#%#%####%#%%%#%%%%###%%%###%######%###%#%%%#%%%###%##%%%%#%#%%%%#%#%#%#%#%#%###%#%#####%%#%##%%%###%%#%%%####%%%#%%%######%%%%%#%%#%##%####%%%#%#%##%%%%##%#%#%#`
+
+In the both cases, proof has valid format as long as the same configuration is used by Client and Verifier.
+
+#### Runing tests
+
+If you are interested in running the tests, clone the repo, install dependecies and run
+
+`npm run test:only`
+
+It will run the tests with defferent strengths, algorithms and sizes.\
 
 ### References, Credits and Links
 - Code snippets in Python and article by Prof Bill Buchanan: https://asecuritysite.com/encryption/fiat2
