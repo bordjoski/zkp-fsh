@@ -39,9 +39,13 @@ class Agreement {
    * @param {Object} value
    */
   static fromJSON(value) {
-    if (!value.prime || !value.generator) throw new Error('Invalid input');
-    const strength = value.strength ? value.strength : 1;
-    return new Agreement(value.prime, value.generator, strength);
+    const {
+      prime,
+      generator,
+      strength
+    } = value;
+    if (!prime || !generator) throw new Error('Invalid input');
+    return new Agreement(prime, generator, strength || 1);
   }
 
   /**

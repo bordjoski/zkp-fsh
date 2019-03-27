@@ -79,31 +79,31 @@ describe('Client test', () => {
     assert(error, 'Expected error');
   });
 
-  it('Should calculate valid secret in the case of valid agreement', async () => {
+  it('Should calculate secret with valid size in the case of valid agreement', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const client = new Client(agreement);
       const secret = client.getSecret('password');
       assert(
         Math.round(agreement.bitLength / secret.bitLength()) === 1,
-        `Unecpected secret with ${secret.bitLength()} lentgh`
+        `Unecpected ${secret.bitLength()}-bit secret`
       );
     });
   });
 
-  it('Should calculate valid claim in the case of valid agreement', async () => {
+  it('Should calculate claim with valid size in the case of valid agreement', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const client = new Client(agreement);
       const claim = client.getClaim();
       assert(
         Math.round(agreement.bitLength / claim.bitLength()) === 1,
-        `Unecpected claim with ${claim.bitLength()} lentgh`
+        `Unecpected ${claim.bitLength()}-bit claim`
       );
     });
   });
 
-  it('Should be able to produce valid proof', async () => {
+  it('Should be able to produce proof with valid size', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const client = new Client(agreement);
@@ -113,7 +113,7 @@ describe('Client test', () => {
       const proof = client.getProof(proofRequest, 'password');
       assert(
         Math.floor(proof.bitLength() / agreement.bitLength) === Math.floor(8 * agreement.strength),
-        `Invalid solved value with ${proof.bitLength()} length`
+        `Invalid ${proof.bitLength()}-bit proof`
       );
     });
   });

@@ -25,39 +25,39 @@ pBits.map(async (p) => {
         assert(agreement.bitLength === p, `Invalid prime size ${agreement.bitLength}. Expected ${p}`);
       });
       algs.map(async (algorithm) => {
-        it(`${p}-bit - ${algorithm} - strength: ${strength} - Client should be able generate valid secret`, () => {
+        it(`${p}-bit - ${algorithm} - strength: ${strength} - Client should be able generate secret with valid length`, () => {
           client = new Client(agreement);
           secret = client.getSecret(password, algorithm);
           assert(
             Math.round(agreement.bitLength / secret.bitLength()) === 1,
-            `Unecpected secret with ${secret.bitLength()} lentgh`
+            `Unecpected ${secret.bitLength()}-bit secret`
           );
         });
 
-        it(`${p}-bit - ${algorithm} - strength: ${strength} - Client should be able generate valid claim`, () => {
+        it(`${p}-bit - ${algorithm} - strength: ${strength} - Client should be able generate claim with valid size`, () => {
           claim = client.getClaim();
           assert(
             Math.round(agreement.bitLength / claim.bitLength()) === 1,
-            `Unecpected claim value with ${claim.bitLength()} lentgh`
+            `Unecpected ${claim.bitLength()}-bit claim`
           );
         });
 
-        it(`${p}-bit - ${algorithm} - strength: ${strength} - Verifier should be able generate valid proof request`, () => {
+        it(`${p}-bit - ${algorithm} - strength: ${strength} - Verifier should be able generate proof request with valid size`, () => {
           verifier = new Verifier(agreement);
           proofRequest = verifier.getProofRequest();
           // console.log(proofRequest);
           assert(
             Math.round(proofRequest.bitLength() / agreement.bitLength) === Math.round(8 * agreement.strength),
-            `Invalid proof request with ${proofRequest.bitLength()} length`
+            `Invalid ${proofRequest.bitLength()}-bit proof request`
           );
         });
 
-        it(`${p}-bit - ${algorithm} - strength: ${strength} - Client should be able to produce valid proof`, () => {
+        it(`${p}-bit - ${algorithm} - strength: ${strength} - Client should be able to produce proof with valid size`, () => {
           proof = client.getProof(proofRequest, password, algorithm);
           // console.log(proof);
           assert(
             Math.round(proof.bitLength() / agreement.bitLength) === Math.round(8 * agreement.strength),
-            `Invalid proof with ${proof.bitLength()} length`
+            `Invalid ${proof.bitLength()}-bit proof`
           );
         });
 

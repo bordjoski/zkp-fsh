@@ -2,14 +2,14 @@ import { assert } from 'chai';
 import { Agreement, Verifier, Client } from '../src';
 
 describe('Verifier test', () => {
-  it('Should produce valid proof request', async () => {
+  it('Should produce proof request with valid size', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const verifier = new Verifier(agreement);
       const proofReq = verifier.getProofRequest();
       assert(
         Math.round(proofReq.bitLength() / agreement.bitLength) === Math.floor(8 * agreement.strength),
-        `Invalid proof request with ${proofReq.bitLength()} length`
+        `Invalid  ${proofReq.bitLength()}-bit proof request`
       );
     });
   });

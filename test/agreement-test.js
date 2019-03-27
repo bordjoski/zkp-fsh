@@ -39,7 +39,7 @@ describe('Agreement test', () => {
 
   it('Agreement should re-create from JSON', async () => {
     const bits = 256;
-    Agreement.generateAgreement(bits).then((agreement) => {
+    Agreement.generateAgreement(bits, 1.5).then((agreement) => {
       const json = agreement.toJSON();
       const agreement2 = Agreement.fromJSON(json)
       assert(
