@@ -35,8 +35,9 @@ class Client extends FSBase {
       const supported = Object.keys(Client.ACCEPTABLE_ALGORITHMS).toString();
       throw new Error(`Unsuported algorithm ${algorithm}. Supported message digest algorithms are: ${supported}`);
     }
-    const x = Utils.fromPassword(password, algorithm).mod(this.agreement.prime);
-    return this.agreement.generator.modPow(x, this.agreement.prime);
+    const hMod = Utils.fromPassword(password, algorithm).mod(this.agreement.prime);
+    const secret = this.agreement.generator.modPow(hMod, this.agreement.prime);
+    return secret.toString(this.agreement.base, this.agreement.alphabet);
   }
 
   /**
@@ -45,7 +46,11 @@ class Client extends FSBase {
   getClaim() {
     if (!this.agreement) throw new Error('Agreement is required');
     this.authProcessId = Utils.generateAuthProcessId(this.agreement);
-    return this.agreement.generator.modPow(this.authProcessId, this.agreement.prime);
+    const claim = this.agreement.generator.modPow(
+      this.authProcessId,
+      this.agreement.prime
+    );
+    return claim.toString(this.agreement.base, this.agreement.alphabet);
   }
 
   /**
@@ -57,7 +62,9 @@ class Client extends FSBase {
   getProof(proofRequest, password, algorithm = 'md5') {
     if (!this.authProcessId) throw new Error('Authentication process not initialized');
     const x = Utils.fromPassword(password, algorithm).mod(this.agreement.prime);
-    return this.authProcessId.minus(bigInt(proofRequest).multiply(x));
+    const proofReq = bigInt(proofRequest, this.agreement.base, this.agreement.alphabet, true);
+    const proof = this.authProcessId.minus(proofReq.multiply(x));
+    return proof.toString(this.agreement.base, this.agreement.alphabet);
   }
 }
 

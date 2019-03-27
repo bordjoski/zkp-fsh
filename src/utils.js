@@ -87,7 +87,7 @@ class Utils {
   }
 
   /**
-   * Generate prime and generator both Client and Verifier will agree to use
+   * Generate agreement values
    * @param {Number} bits Length
    */
   static async generateAgreementValues(bits) {

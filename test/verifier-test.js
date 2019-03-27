@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import bigInt from 'big-integer';
 import { Agreement, Verifier, Client } from '../src';
 
 describe('Verifier test', () => {
@@ -7,9 +8,10 @@ describe('Verifier test', () => {
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const verifier = new Verifier(agreement);
       const proofReq = verifier.getProofRequest();
+      const proofRequestToBig = bigInt(proofReq, agreement.base, agreement.alphabet, true);
       assert(
-        Math.round(proofReq.bitLength() / agreement.bitLength) === Math.floor(8 * agreement.strength),
-        `Invalid  ${proofReq.bitLength()}-bit proof request`
+        Math.round(proofRequestToBig.bitLength() / agreement.bitLength) === Math.floor(8 * agreement.strength),
+        `Invalid  ${proofRequestToBig.bitLength()}-bit proof request`
       );
     });
   });

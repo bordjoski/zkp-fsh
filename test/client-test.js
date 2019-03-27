@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import bigInt from 'big-integer';
 import { Agreement, Client, Verifier } from '../src';
 
 describe('Client test', () => {
@@ -84,9 +85,10 @@ describe('Client test', () => {
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const client = new Client(agreement);
       const secret = client.getSecret('password');
+      const secretToBig = bigInt(secret, agreement.base, agreement.alphabet, true);
       assert(
-        Math.round(agreement.bitLength / secret.bitLength()) === 1,
-        `Unecpected ${secret.bitLength()}-bit secret`
+        Math.round(agreement.bitLength / secretToBig.bitLength()) === 1,
+        `Unecpected ${secretToBig.bitLength()}-bit secret`
       );
     });
   });
@@ -96,9 +98,10 @@ describe('Client test', () => {
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const client = new Client(agreement);
       const claim = client.getClaim();
+      const claimToBig = bigInt(claim, agreement.base, agreement.alphabet, true);
       assert(
-        Math.round(agreement.bitLength / claim.bitLength()) === 1,
-        `Unecpected ${claim.bitLength()}-bit claim`
+        Math.round(agreement.bitLength / claimToBig.bitLength()) === 1,
+        `Unecpected ${claimToBig.bitLength()}-bit claim`
       );
     });
   });
@@ -111,9 +114,10 @@ describe('Client test', () => {
       const claim = client.getClaim();
       const proofRequest = verifier.getProofRequest();
       const proof = client.getProof(proofRequest, 'password');
+      const proofToBig = bigInt(proof, agreement.base, agreement.alphabet, true);
       assert(
-        Math.floor(proof.bitLength() / agreement.bitLength) === Math.floor(8 * agreement.strength),
-        `Invalid ${proof.bitLength()}-bit proof`
+        Math.floor(proofToBig.bitLength() / agreement.bitLength) === Math.floor(8 * agreement.strength),
+        `Invalid ${proofToBig.bitLength()}-bit proof`
       );
     });
   });

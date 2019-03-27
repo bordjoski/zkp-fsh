@@ -17,13 +17,17 @@ In the case password based authentication system is required, it is worth consid
 
 #### Registration process:
 
-1. Client and Verifier makes agreement (which by default uses 1024-bit prime number)\
+1. Define agreement (which by default uses 1024-bit prime number) and has default strength 1\
 `const agreement = await zkpfsh.Agreement.generateAgreement();`\
+If you would like to generate agreement with 512-bit prime number and strength 2:\
+`const agreement = await zkpfsh.Agreement.generateAgreement(512, 2);`\
+Strength can be in range 1 - 2 and it affects size of proof (produced by Client) and size of proof request (produced by Verifier)
 
+2. Make agreement between Client and Verifier\
 `const client = new zkpfsh.Client(agreement);`\
 `const verifier = new zkpfsh.Verifier(agreement);`
 
-2. Client calculates a secret based on provided agreement and password and sends result to Verifier.\
+3. Client calculates a secret based on provided agreement and password and sends result to Verifier.\
 `const secret = client.getSecret('password');`
 
 #### Authentication proccess:
@@ -41,6 +45,22 @@ In the case password based authentication system is required, it is worth consid
 `const success = verifier.verify(proof, claim, secret);`
 
 5. Client has prooven to know a password
+
+Note that Agreement can be initialized from serialized data produced with `agreement.toJSON()` as follows:
+
+`const agreement = await zkpfsh.Agreement.generateAgreement();`\
+`const serialized = agreement.toJSON();`\
+`const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized);`
+
+Optionaly, agreement can be configured to use custom base/radix and alphabet during conversion process. Default base is `10` and default alphabet is `0123456789abcdefghijklmnopqrstuvwxyz`. If used, configuration must be done manualy both on Client and Verifier side to be able to deserialize data. Configuration details is not included in serialized Agreement. For example:
+
+`const agreement = await zkpfsh.Agreement.generateAgreement();`\
+`agreement.configure(2, '#%');`\
+`const serialized = agreement.toJSON();`\
+`const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized, 2, '#%');`
+
+By doing this, all data produced by Client or Verifier will use the same base and alphabet.
+
 
 ### References, Credits and Links
 - Code snippets in Python and article by Prof Bill Buchanan: https://asecuritysite.com/encryption/fiat2

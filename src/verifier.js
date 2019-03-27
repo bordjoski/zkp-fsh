@@ -29,7 +29,7 @@ class Verifier extends FSBase {
   getProofRequest() {
     if (!this.agreement) throw new Error('Agreement is required');
     this.authProcessId = Utils.generateAuthProcessId(this.agreement);
-    return this.authProcessId;
+    return this.authProcessId.toString(this.agreement.base, this.agreement.alphabet);
   }
 
   /**
@@ -65,7 +65,7 @@ class Verifier extends FSBase {
    * @param {*} claim Claim provided by Client
    */
   setClaim(claim) {
-    this.claim = bigInt(claim);
+    this.claim = bigInt(claim, this.agreement.base, this.agreement.alphabet, true);
   }
 
   /**
@@ -73,7 +73,7 @@ class Verifier extends FSBase {
    * @param {} proof Proof provided by Client.
    */
   setProof(proof) {
-    this.proof = bigInt(proof);
+    this.proof = bigInt(proof, this.agreement.base, this.agreement.alphabet, true);
   }
 
   /**
@@ -81,7 +81,7 @@ class Verifier extends FSBase {
    * @param {*} secret Secret provided by Client
    */
   setSecret(secret) {
-    this.secret = bigInt(secret);
+    this.secret = bigInt(secret, this.agreement.base, this.agreement.alphabet, true);
   }
 }
 
