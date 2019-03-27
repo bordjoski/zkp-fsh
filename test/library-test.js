@@ -12,7 +12,7 @@ let password = "password";
 let agreement;
 
 const algs = ['md5', 'sha1', 'sha256', 'sha384', 'sha512'];
-const pBits = [128, 256, 512, 1024, 2048];
+const pBits = [128, 256];
 
 // testing with following agreement strengths:
 const strengths = [1, 1.4, 2];

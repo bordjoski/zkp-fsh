@@ -16,7 +16,7 @@ describe('Verifier test', () => {
     });
   });
 
-  it('Should verify correctly solved challange', async () => {
+  it('Should succeed to verify correctly solved challange', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
       const client = new Client(agreement);

@@ -46,13 +46,15 @@ Strength can be in range 1 - 2 and it affects size of proof (produced by Client)
 
 5. Client has prooven to know a password
 
-Note that Agreement can be initialized from serialized data produced with `agreement.toJSON()` as follows:
+#### Agreement configuration
+
+Agreement can be re-creacted from serialized data produced with `agreement.toJSON()` as follows:
 
 `const agreement = await zkpfsh.Agreement.generateAgreement();`\
 `const serialized = agreement.toJSON();`\
 `const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized);`
 
-Optionaly, agreement can be configured to use custom base/\radix and alphabet during conversion process. Default base is `10` and default alphabet is `0123456789abcdefghijklmnopqrstuvwxyz`.\
+Optionaly, agreement can be configured to use custom base and alphabet during conversion process. Default base is `10` and default alphabet is `0123456789abcdefghijklmnopqrstuvwxyz`.\
 If used, configuration must be done manualy both on Client and Verifier side and must be identical to be able to deserialize data.\
 Configuration details is not included in serialized Agreement.\
 Example:
