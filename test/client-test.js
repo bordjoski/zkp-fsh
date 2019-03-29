@@ -116,7 +116,7 @@ describe('Client test', () => {
       const proof = client.getProof(proofRequest, 'password');
       const proofToBig = bigInt(proof, agreement.base, agreement.alphabet, true);
       assert(
-        Math.floor(proofToBig.bitLength() / agreement.bitLength) === Math.floor(8 * agreement.strength),
+        Math.round((proofToBig.bitLength() / agreement.bitLength) / (8 * agreement.strength)) === 1,
         `Invalid ${proofToBig.bitLength()}-bit proof`
       );
     });

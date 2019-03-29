@@ -51,17 +51,18 @@ pBits.map(async (p) => {
           proofRequest = verifier.getProofRequest();
           const proofRequestToBig = bigInt(proofRequest, agreement.base, agreement.alphabet, true);
           assert(
-            Math.round(proofRequestToBig.bitLength() / agreement.bitLength) === Math.round(8 * agreement.strength),
-            `Invalid ${proofRequestToBig.bitLength()}-bit proof request`
+            Math.round((proofRequestToBig.bitLength() / agreement.bitLength) / (8 * agreement.strength)) === 1,
+            `Unexpected ${proofRequestToBig.bitLength()}-bit proof request`
           );
         });
 
         it(`${p}-bit - ${algorithm} - strength: ${strength} - Client should be able to produce proof with valid size`, () => {
           proof = client.getProof(proofRequest, password, algorithm);
+          // console.log(proof);
           const proofToBig = bigInt(proof, agreement.base, agreement.alphabet, true);
           assert(
-            Math.round(proofToBig.bitLength() / agreement.bitLength) === Math.round(8 * agreement.strength),
-            `Invalid ${proofToBig.bitLength()}-bit proof`
+            Math.round((proofToBig.bitLength() / agreement.bitLength) / (8 * agreement.strength)) === 1,
+            `Unexpected ${proofToBig.bitLength()}-bit proof.`
           );
         });
 

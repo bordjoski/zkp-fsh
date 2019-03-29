@@ -10,7 +10,7 @@ describe('Verifier test', () => {
       const proofReq = verifier.getProofRequest();
       const proofRequestToBig = bigInt(proofReq, agreement.base, agreement.alphabet, true);
       assert(
-        Math.round(proofRequestToBig.bitLength() / agreement.bitLength) === Math.floor(8 * agreement.strength),
+        Math.round((proofRequestToBig.bitLength() / agreement.bitLength) / (8 * agreement.strength)) === 1,
         `Invalid  ${proofRequestToBig.bitLength()}-bit proof request`
       );
     });
@@ -22,7 +22,6 @@ describe('Verifier test', () => {
       const client = new Client(agreement);
       const verifier = new Verifier(agreement);
       const password = 'password';
-
       const secret = client.getSecret(password);
       const claim = client.getClaim();
       const proofReq = verifier.getProofRequest();
@@ -42,7 +41,6 @@ describe('Verifier test', () => {
       const client = new Client(agreement);
       const verifier = new Verifier(agreement);
       const password = 'wrong-password';
-
       const secret = client.getSecret(password);
       const claim = client.getClaim();
       const proofReq = verifier.getProofRequest();
