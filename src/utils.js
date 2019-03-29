@@ -4,7 +4,6 @@
 
 import forge from 'node-forge';
 import bigInt from 'big-integer';
-import math from 'mathjs';
 
 /**
  * Helper methods
@@ -68,20 +67,9 @@ class Utils {
    * @param {Integer} p Prime number
    */
   static inverseOf(n, p) {
-    math.config({
-      number: 'BigNumber',
-      precision: Math.floor(p.bitLength() * 0.33)
-    });
-
-    const r = math.xgcd(
-      math.bignumber(n.toString()),
-      math.bignumber(p.toString())
-    );
-
-    // eslint-disable-next-line no-underscore-dangle
-    const x = bigInt(r._data[1].toString());
-    // In case r._data[1] is negative, add extra p
-    // since multiplicative inverse of A in range p lies in the range [0, p-1]
+    const x = n.modInv(p);
+    // In case x is negative, add extra p
+    // since multiplicative inverse of n in range p lies in the range [0, p-1]
     const xp = x.isNegative() ? x.plus(p) : x;
     return xp.mod(p);
   }
