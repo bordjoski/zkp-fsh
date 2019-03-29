@@ -2,7 +2,7 @@
  * @author Mirko Bordjoski <mirko.bordjoski@gmail.com>, 2019
  */
 
-import forge from 'node-forge';
+import crypto from 'crypto';
 import bigInt from 'big-integer';
 
 /**
@@ -13,41 +13,31 @@ class Utils {
    * Generate prime number
    * @param {Number} bits bit length
    */
-  static async getPrime(bits = 1024) {
-    return new Promise((resolve, reject) => {
-      const opts = {
-        algorithm: {
-          name: 'PRIMEINC',
-          workers: -1
-        }
-      };
-      forge.prime.generateProbablePrime(bits, opts, (err, num) => {
-        if (err) reject(err);
-        resolve(num);
-      });
-    });
+  static getPrime(bits = 1024) {
+    const df = crypto.createDiffieHellman(bits);
+    return bigInt(df.getPrime('hex'), 16);
   }
 
   /**
    * Generate random - async
-   * @param {Number} bits bit length
+   * @param {Number} bits Length
    */
   static async getRandomAsync(bits) {
     return new Promise((resolve, reject) => {
-      forge.random.getBytes(bits, (err, r) => {
+      crypto.randomBytes(bits, (err, buf) => {
         if (err) reject(err);
-        resolve(bigInt(forge.util.bytesToHex(r), 16));
+        resolve(bigInt(buf.toString('hex'), 16));
       });
     });
   }
 
   /**
    * Generate random - sync
-   * @param {Number} bits bit Length
+   * @param {Number} bits Length
    */
   static getRandomSync(bits) {
-    const r = forge.random.getBytesSync(bits);
-    return bigInt(forge.util.bytesToHex(r), 16);
+    const buf = Buffer.alloc(bits);
+    return bigInt(crypto.randomFillSync(buf).toString('hex'), 16);
   }
 
   /**
@@ -55,9 +45,9 @@ class Utils {
    * @param {String} password Password
    * @param {String} algorithm Algorithm
    */
-  static fromPassword(password, algorithm = 'md5') {
-    const d = forge.md[algorithm].create().update(password).digest();
-    return bigInt(parseInt(d.toHex().substr(0, 8), 16));
+  static fromPassword(value, md = 'md5') {
+    const d = crypto.createHash(md).update(value).digest('hex');
+    return bigInt(parseInt(d.substr(0, 8), 16));
   }
 
   /**
@@ -79,14 +69,10 @@ class Utils {
    * @param {Number} bits Length
    */
   static async generateAgreementValues(bits) {
-    return new Promise((resolve, reject) => {
-      Utils.getPrime(bits).then((p) => {
-        resolve({
-          prime: p.toString(),
-          generator: 2
-        });
-      }).catch((e) => {
-        reject(e);
+    return new Promise((resolve) => {
+      resolve({
+        prime: Utils.getPrime(bits).toString(),
+        generator: 2
       });
     });
   }
