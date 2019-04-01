@@ -13,17 +13,6 @@ import Utils from './utils';
  */
 class Verifier extends FSBase {
   /**
-   * @param {Agreement} agreement Agreement made between Client and Verifier
-   * @param {*} authenticationProcessId Optional. Proof request given to the Client
-   */
-  constructor(agreement, authenticationProcessId) {
-    super(agreement);
-    if (authenticationProcessId) {
-      this.authProcessId = bigInt(authenticationProcessId);
-    }
-  }
-
-  /**
    * Generates proof request for the Client.
    */
   getProofRequest() {
@@ -34,16 +23,27 @@ class Verifier extends FSBase {
 
   /**
    * Verifies the proof provided by Client
-   * @param {*} proof Proof provided by Client
-   * @param {*} claim Claim provided by Client
-   * @param {*} secret Secret provided by Client
+   * @param {String} proof Proof provided by Client
+   * @param {String} claim Claim provided by Client
+   * @param {String} secret Secret provided by Client
+   * @param {String} proofRequest Optional. Proof request given to the Client.
+   * Useful in the case Verifier is initialized for verification only.
    */
-  verify(proof, claim, secret) {
+  verify(proof, claim, secret, proofRequest) {
+    if (!this.agreement) throw new Error('Verification Error: Agreement is required');
+
     this.setProof(proof);
     if (claim) this.setClaim(claim);
     if (secret) this.setSecret(secret);
+    if (proofRequest) {
+      this.authProcessId = bigInt(
+        proofRequest,
+        this.agreement.base,
+        this.agreement.alphabet,
+        true
+      );
+    }
 
-    if (!this.agreement) throw new Error('Verification Error: Agreement is required');
     if (!this.authProcessId) throw new Error('Verification Error: Authentication process not initialized');
     if (!this.secret) throw new Error('Verification Error: Missing the secret');
     if (!this.claim) throw new Error('Verification Error: Missing the claim');

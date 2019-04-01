@@ -85,9 +85,16 @@ class Agreement {
     }
   }
 
+  /**
+   * Configure agreement.
+   * @param {Object} config Object containing base and alphabet
+   */
   configure(config) {
     this.alphabet = config.alphabet || Agreement.DEFAULT_ALPHABET;
     this.base = config.base || Agreement.DEFAULT_BASE;
+    if (this.alphabet.indexOf('-') !== -1) {
+      throw new Error('Agreement configuration error: Minus not allowed.');
+    }
   }
 
   /**
@@ -101,7 +108,9 @@ class Agreement {
    * Indicates if agreement is valid or not
    */
   get isValid() {
-    return this.prime.isProbablePrime() && this.bitLength >= Agreement.MIN_LENGTH;
+    return this.prime.isProbablePrime()
+      && this.bitLength >= Agreement.MIN_LENGTH
+      && this.alphabet.indexOf('-') === -1;
   }
 
   /**
