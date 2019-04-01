@@ -58,7 +58,8 @@ describe('Agreement test', () => {
       const json = agreement.toJSON();
       const agreement2 = Agreement.fromJSON(json, config);
       assert(
-        agreement.prime.eq(agreement2.prime)
+        agreement2.isValid
+        && agreement.prime.eq(agreement2.prime)
         && agreement.generator.eq(agreement2.generator)
         && agreement.strength === agreement2.strength,
         'Agreement should re-create from given values'
@@ -95,6 +96,19 @@ describe('Agreement test', () => {
       assert(agreement.isValid, 'Expected to be valid');
       agreement.prime = agreement.prime.next();
       assert(!agreement.isValid, 'Expected to be invalid');
+    });
+  });
+
+  it('Should throw error in the case "-" character is used in custom alphabet', async () => {
+    Agreement.generateAgreement(128).then((agreement) => {
+      let err;
+      try {
+        agreement.configure({ base: 2, alphabet: '-&' });
+      } catch (e) {
+        err = e;
+      }
+      assert(!agreement.isValid, 'Agreement should be invalid.');
+      assert(err, 'Error expected');
     });
   });
 });
