@@ -26,8 +26,9 @@ In the case password based authentication system is required, it is worth consid
 
 3. Client calculates a secret based on provided agreement and password and sends result to Verifier to store.\
 `const secret = client.getSecret('password');`\
-Optionaly, algorithm can be specified with second parameter. Acceptable algorithms are: `md5, sha1, sha256, sha384, sha512`.\
-Note that same algorithm must be used later in `client.getProof` method. Default is `md5`.
+Optionaly, algorithm can be specified with second parameter. Supported algorithms are: `md5, sha1, sha256, sha384, sha512`.\
+Note that same algorithm must be used later in `client.getProof` method. Default is `md5`.\
+`sha512/224` and `sha512/256` will be supported in future releases.
 
 #### Authentication proccess:
 
@@ -51,8 +52,8 @@ Optionaly, algorithm can be specified with third parameter and must be the same 
 Agreement is valid when generated with at least 128-bit prime number.\
 By default it uses 1024-bit prime number and has default strength 1.
 
-Example of initialization of agreement with 512-bit prime number and given strength 1.5:\
-`const agreement = await zkpfsh.Agreement.generateAgreement(512, 1.5);`
+Example of initialization of agreement with 512-bit prime number, generator with given value 2 and given strength 1.5:\
+`const agreement = await zkpfsh.Agreement.generateAgreement(512, 2, 1.5);`
 
 Strength can be in range 1 - 2 and it affects size of the proof (produced by Client) and size of the proof request (produced by Verifier), meaning that bit length of the proof in the case of Client (or bit length of the proof request in the case of Verifier) devided by bit length of agreement is equal to given strength multiplied by 8
 
