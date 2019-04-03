@@ -74,25 +74,13 @@ describe('Verifier test', () => {
     });
   });
 
-  it('Should throw error when try to verify proof but no agreement is provided previously', () => {
-    const verifier = new Verifier();
-    let err;
+  it('Should throw error in initialization phase where agreement is required but not provided', () => {
+    let error;
     try {
-      verifier.verify('claim', 'proof', 'secret');
+      const verifier = new Verifier();
     } catch (e) {
-      err = e;
+      error = e;
     }
-    assert(err, 'Error expected');
-  });
-
-  it('Should throw error when try to get a proof request but no agreement is provided previously', () => {
-    const verifier = new Verifier();
-    let err;
-    try {
-      verifier.getProofRequest();
-    } catch (e) {
-      err = e;
-    }
-    assert(err, 'Error expected');
+    assert(error, 'Expected error');
   });
 });

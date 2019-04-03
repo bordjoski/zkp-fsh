@@ -10,6 +10,19 @@ import bigInt from 'big-integer';
  */
 class Utils {
   /**
+   * Supported message digest algorithms
+   */
+  static get SUPPORTED_ALGORITHMS() {
+    return {
+      md5: 'md5',
+      sha1: 'sha1',
+      sha256: 'sha256',
+      sha384: 'sha384',
+      sha512: 'sha512'
+    };
+  }
+
+  /**
    * Generate prime number
    * @param {Number} bits bit length
    */
@@ -56,6 +69,10 @@ class Utils {
    * @param {String} algorithm Algorithm
    */
   static fromPassword(password, algorithm = 'md5') {
+    if (!Utils.SUPPORTED_ALGORITHMS[algorithm]) {
+      const supported = Object.keys(Utils.SUPPORTED_ALGORITHMS).toString();
+      throw new Error(`Unsuported algorithm ${algorithm}. Supported message digest algorithms are: ${supported}`);
+    }
     const d = forge.md[algorithm].create().update(password).digest();
     return bigInt(parseInt(d.toHex().substr(0, 8), 16));
   }

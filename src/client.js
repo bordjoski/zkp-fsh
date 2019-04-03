@@ -12,29 +12,11 @@ import Utils from './utils';
  */
 class Client extends FSBase {
   /**
-   * Acceptable message digest algorithms
-   */
-  static get ACCEPTABLE_ALGORITHMS() {
-    return {
-      md5: 'md5',
-      sha1: 'sha1',
-      sha256: 'sha256',
-      sha384: 'sha384',
-      sha512: 'sha512'
-    };
-  }
-
-  /**
    * Get secret for registration purposes
    * @param {String} password Password
    * @param {String} algorithm message-digest algorithm
    */
   getSecret(password, algorithm = 'md5') {
-    if (!this.agreement) throw new Error('Agreement is required');
-    if (!Client.ACCEPTABLE_ALGORITHMS[algorithm]) {
-      const supported = Object.keys(Client.ACCEPTABLE_ALGORITHMS).toString();
-      throw new Error(`Unsuported algorithm ${algorithm}. Supported message digest algorithms are: ${supported}`);
-    }
     const hMod = Utils.fromPassword(password, algorithm).mod(this.agreement.prime);
     const secret = this.agreement.generator.modPow(hMod, this.agreement.prime);
     return secret.toString(this.agreement.base, this.agreement.alphabet);
@@ -44,7 +26,6 @@ class Client extends FSBase {
    * Get claim
    */
   getClaim() {
-    if (!this.agreement) throw new Error('Agreement is required');
     this.authProcessId = Utils.generateAuthProcessId(this.agreement);
     const claim = this.agreement.generator.modPow(
       this.authProcessId,
