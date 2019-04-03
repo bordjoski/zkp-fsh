@@ -95,12 +95,13 @@ class Utils {
    * Generate agreement values
    * @param {Number} bits Length
    */
-  static async generateAgreementValues(bits) {
+  static async generateAgreementValues(bits, generator) {
+    if (generator < 2) throw new Error('Invalid generator');
     return new Promise((resolve, reject) => {
       Utils.getPrime(bits).then((p) => {
         resolve({
           prime: p.toString(),
-          generator: 2
+          generator
         });
       }).catch((e) => {
         reject(e);
