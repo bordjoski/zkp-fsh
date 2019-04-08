@@ -24,9 +24,12 @@ class Client extends FSBase {
 
   /**
    * Get claim
+   * @param {Array} collectedActivity Optional.
+   * Array representing collection of user inputs or activity.
+   * (Eg array of mouse positions). Used for collected entropy.
    */
-  getClaim() {
-    this.authProcessId = Utils.generateAuthProcessId(this.agreement);
+  getClaim(collectedActivity) {
+    this.authProcessId = Utils.generateAuthProcessId(this.agreement, collectedActivity);
     const claim = this.agreement.generator.modPow(
       this.authProcessId,
       this.agreement.prime
@@ -36,7 +39,7 @@ class Client extends FSBase {
 
   /**
    * Get proof
-   * @param {*} proofRequest Proof request given by Verifier
+   * @param {String} proofRequest Proof request given by Verifier
    * @param {String} password Password
    * @param {String} algorithm message-digest algorithm
    */

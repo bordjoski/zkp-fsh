@@ -13,9 +13,10 @@ import Utils from './utils';
 class Verifier extends FSBase {
   /**
    * Generates proof request for the Client.
+   * @param {String} randomBytes Optional. Used for collected entropy.
    */
-  getProofRequest() {
-    this.authProcessId = Utils.generateAuthProcessId(this.agreement);
+  getProofRequest(randomBytes) {
+    this.authProcessId = Utils.generateAuthProcessId(this.agreement, null, randomBytes);
     return this.authProcessId.toString(this.agreement.base, this.agreement.alphabet);
   }
 

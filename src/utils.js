@@ -42,24 +42,16 @@ class Utils {
   }
 
   /**
-   * Generate random - async
-   * @param {Number} bits bit length
-   */
-  static async getRandomAsync(bits) {
-    return new Promise((resolve, reject) => {
-      forge.random.getBytes(bits, (err, r) => {
-        if (err) reject(err);
-        resolve(bigInt(forge.util.bytesToHex(r), 16));
-      });
-    });
-  }
-
-  /**
    * Generate random - sync
    * @param {Number} bits bit Length
+   * @param {Array} collected Optional. Used for collected entropy.
+   * @param {String} randomBytes Optional. Used for collected entropy.
    */
-  static getRandomSync(bits) {
-    const r = forge.random.getBytesSync(bits);
+  static getRandom(bits, collected, randomBytes) {
+    const prngInstance = forge.random.createInstance();
+    if (randomBytes) prngInstance.collect(randomBytes);
+    if (collected) collected.forEach(c => prngInstance.collectInt(c, 16));
+    const r = prngInstance.getBytesSync(bits);
     return bigInt(forge.util.bytesToHex(r), 16);
   }
 
@@ -111,10 +103,13 @@ class Utils {
 
   /**
    * Generate authentication process identifier.
+   * @param {Agreement} agreement Agreement
+   * @param {Array} collected Optional. Used for collected entropy.
+   * @param {String} randomBytes Optional. Used for collected entropy.
    */
-  static generateAuthProcessId(agreement) {
+  static generateAuthProcessId(agreement, collected, randomBytes) {
     const bits = Math.floor(agreement.bitLength * agreement.strength);
-    return Utils.getRandomSync(bits);
+    return Utils.getRandom(bits, collected, randomBytes);
   }
 }
 

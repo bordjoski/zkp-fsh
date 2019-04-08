@@ -26,36 +26,40 @@ In the case password based authentication system is required, it is worth consid
 
 3. Client calculates a secret based on provided agreement and password and sends result to Verifier to store.\
 `const secret = client.getSecret('password');`\
-Optionaly, algorithm can be specified with second parameter. Supported algorithms are: `md5, sha1, sha256, sha384, sha512`.\
+Optionally, algorithm can be specified with second parameter. Supported algorithms are: `md5, sha1, sha256, sha384, sha512`.\
 Note that same algorithm must be used later in `client.getProof` method. Default is `md5`.\
-`sha512/224` and `sha512/256` will be supported in future releases.
 
 #### Authentication proccess:
 
 1. Client calculates a claim and provides it to Verifier'\
-`const claim = client.getClaim();`
+`const claim = client.getClaim();`\
+Optionally, `getClaim` method accepts array of user inputs or activity (e.g. mouse movements). Used for collected entropy.
 
 2. Verifier generates a proof request and sends it to the client\
-`const proofRequest = verifier.getProofRequest();`
+`const proofRequest = verifier.getProofRequest();`\
+Optionally, random bytes can be passed in `getProofRequest` method. Used for collected entropy.
 
 3. Client calculates a proof based on recieved proof request and sends result back to Verifier\
 `const proof = client.getProof(proofRequest, 'password');`\
-Optionaly, algorithm can be specified with third parameter and must be the same one used in registration process. Default is `md5`.
+Optionally, algorithm can be specified with third parameter and must be the same one used in registration process. Default is `md5`.
 
 4. Verifier tries to verify a claim\
 `const success = verifier.verify(proof, claim, secret);`
 
-5. Client has prooven to know a password
+5. Client has proven to know a password
 
 #### Agreement configuration
 
 Agreement is valid when generated with at least 128-bit prime number.\
 By default it uses 1024-bit prime number and has default strength 1.
 
-Example of initialization of agreement with 512-bit prime number, generator with given value 2 and given strength 1.5:\
-`const agreement = await zkpfsh.Agreement.generateAgreement(512, 2, 1.5);`
+Example of initialization of agreement with 1024-bit prime number and given strength 1.5:\
+`const agreement = await zkpfsh.Agreement.generateAgreement(1024, 1.5);`
 
-Strength can be in range 1 - 2 and it affects size of the proof (produced by Client) and size of the proof request (produced by Verifier), meaning that bit length of the proof in the case of Client (or bit length of the proof request in the case of Verifier) devided by bit length of agreement is equal to given strength multiplied by 8
+Strength can be in range 1 - 2 and it affects size of the proof (produced by Client) and size of the proof request (produced by Verifier), meaning that bit length of the proof in the case of Client (or bit length of the proof request in the case of Verifier) devided by bit length of agreement is equal to given strength multiplied by 8.
+
+Agreement by default uses generator with default value 2 but custom value can be passed as third parameter in `generateAgreement` method:\
+`const agreement = await zkpfsh.Agreement.generateAgreement(1024, 1.5, 7);`
 
 Agreement can be re-creacted from serialized data produced with `agreement.toJSON()` as follows:
 
@@ -63,7 +67,7 @@ Agreement can be re-creacted from serialized data produced with `agreement.toJSO
 `const serialized = agreement.toJSON();`\
 `const recreatedAgreement = zkpfsh.Agreement.fromJSON(serialized);`
 
-Optionaly, agreement can be configured to use custom base and alphabet during conversion process. Default base is `10` and default alphabet is `0123456789abcdefghijklmnopqrstuvwxyz`.\
+Agreement can be configured to use custom base and alphabet during conversion process. Default base is `10` and default alphabet is `0123456789abcdefghijklmnopqrstuvwxyz`.\
 If used, configuration must be done manualy both on Client and Verifier side and must be identical to be able to deserialize data.\
 Configuration details are not included in serialized Agreement.
 
@@ -100,7 +104,7 @@ It will run the tests with defferent strengths, algorithms and sizes.
 - Code snippets in Python and article by Prof Bill Buchanan: https://asecuritysite.com/encryption/fiat2
 - Video presentation on specific topic by Prof Bill Buchanan: https://www.youtube.com/watch?v=n2WUJyk9cHA
 - Original paper: How To Prove Yourself: Practical Solutions to Identification and Signature Problems: https://link.springer.com/content/pdf/10.1007/3-540-47721-7_12.pdf
-- forge documentation https://www.npmjs.com/package/node-forge
-- bigInt library https://www.npmjs.com/package/big-integer
-- mathjs documentation: https://mathjs.org/
-- npm module boilerplate: https://github.com/flexdinesh/npm-module-boilerplate
+- node-forge https://www.npmjs.com/package/node-forge
+- big-integer https://www.npmjs.com/package/big-integer
+- mathjs https://mathjs.org/
+- npm-module-boilerplate https://github.com/flexdinesh/npm-module-boilerplate

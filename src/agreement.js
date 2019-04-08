@@ -37,8 +37,9 @@ class Agreement {
    * Generate new agreement
    * @param {Number} bits bit length of prime number used in agreement
    * @param {Number} strength Strength of agreement. Allowed values are in range 1 - 2
+   * @param {Number} generator Generator
    */
-  static async generateAgreement(bits = 1024, generator = 2, strength = 1) {
+  static async generateAgreement(bits = 1024, strength = 1, generator = 2) {
     return new Promise((resolve, reject) => {
       Utils.generateAgreementValues(bits, Math.floor(generator)).then((a) => {
         resolve(new Agreement(a.prime, a.generator, strength));

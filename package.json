@@ -1,6 +1,6 @@
 {
   "name": "zkp-fish",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Proof of concept library and helper methods enabling user to authenticate without compromising the password and without shared or public keys. Implements non-interactive random oracle access method for Zero Knowladge Proof - Fiat-Shamir heruistic",
   "main": "./lib/index.js",
   "scripts": {
@@ -28,9 +28,13 @@
   "author": "Mirko Bordjoski <mirko.bordjoski@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "big-integer": "^1.6.42",
-    "node-forge": "^0.8.1",
-    "babel-polyfill": "6.26.0"
+    "babel-polyfill": "6.26.0",
+    "big-integer": "^1.6.43",
+    "node-forge": "^0.8.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bordjoski/zkp-fish.git"
   },
   "bugs": {
     "url": "https://github.com/bordjoski/zkp-fish/issues"
