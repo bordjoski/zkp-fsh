@@ -30,7 +30,7 @@ describe('Agreement test', () => {
     const aStrength = 6;
     let err;
     try {
-      const a = await Agreement.generateAgreement(128, aStrength);
+      const a = await Agreement.generateAgreement(128, 2, aStrength);
     } catch (e) {
       err = e;
     }
@@ -52,7 +52,7 @@ describe('Agreement test', () => {
 
   it('Agreement should re-create from JSON using same agreement configuration', async () => {
     const bits = 256;
-    Agreement.generateAgreement(bits, 1.5).then((agreement) => {
+    Agreement.generateAgreement(bits, 2, 1.5).then((agreement) => {
       const config = { base: 2, alphabet: '#%' };
       agreement.configure(config);
       const json = agreement.toJSON();
@@ -69,7 +69,7 @@ describe('Agreement test', () => {
 
   it('Agreement should fail to re-create from JSON using diferent agreement configuration', async () => {
     const bits = 256;
-    Agreement.generateAgreement(bits, 1.5).then((agreement) => {
+    Agreement.generateAgreement(bits, 2, 1.5).then((agreement) => {
       const config1 = { base: 2, alphabet: '#%' };
       const config2 = { base: 10, alphabet: Agreement.DEFAULT_ALPHABET };
       agreement.configure(config1);

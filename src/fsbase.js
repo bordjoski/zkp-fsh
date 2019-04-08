@@ -11,7 +11,8 @@ class FSBase {
    * @param {Agreement} agreement Agreement made between Client and Verifier
    */
   constructor(agreement) {
-    if (agreement) this.setAgreement(agreement);
+    if (!agreement) throw new Error('Initialization Error: Agreement is required');
+    this.setAgreement(agreement);
   }
 
   /**
@@ -20,9 +21,9 @@ class FSBase {
    */
   setAgreement(agreement) {
     if (!agreement.prime || !agreement.generator) throw new Error('Invalid Agreement');
-    if (!agreement.prime.isProbablePrime()) { throw new Error('Invalid Agreement - Invalid prime number'); }
+    if (!agreement.prime.isProbablePrime()) { throw new Error('Invalid Agreement: Invalid prime number'); }
     if (agreement.bitLength < Agreement.MIN_LENGTH) {
-      throw new Error(`Agreement must be initialized with at least ${Agreement.MIN_LENGTH}bit prime`);
+      throw new Error(`Agreement must be initialized with at least ${Agreement.MIN_LENGTH}-bit prime`);
     }
     this.agreement = agreement;
   }

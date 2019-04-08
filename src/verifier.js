@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 /**
  * @author Mirko Bordjoski <mirko.bordjoski@gmail.com>, 2019
  */
@@ -16,7 +15,6 @@ class Verifier extends FSBase {
    * Generates proof request for the Client.
    */
   getProofRequest() {
-    if (!this.agreement) throw new Error('Agreement is required');
     this.authProcessId = Utils.generateAuthProcessId(this.agreement);
     return this.authProcessId.toString(this.agreement.base, this.agreement.alphabet);
   }
@@ -30,8 +28,6 @@ class Verifier extends FSBase {
    * Useful in the case Verifier is initialized for verification only.
    */
   verify(proof, claim, secret, proofRequest) {
-    if (!this.agreement) throw new Error('Verification Error: Agreement is required');
-
     this.setProof(proof);
     if (claim) this.setClaim(claim);
     if (secret) this.setSecret(secret);
@@ -43,7 +39,6 @@ class Verifier extends FSBase {
         true
       );
     }
-
     if (!this.authProcessId) throw new Error('Verification Error: Authentication process not initialized');
     if (!this.secret) throw new Error('Verification Error: Missing the secret');
     if (!this.claim) throw new Error('Verification Error: Missing the claim');

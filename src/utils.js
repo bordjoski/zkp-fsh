@@ -10,6 +10,19 @@ import bigInt from 'big-integer';
  */
 class Utils {
   /**
+   * Supported message digest algorithms
+   */
+  static get SUPPORTED_ALGORITHMS() {
+    return {
+      md5: 'md5',
+      sha1: 'sha1',
+      sha256: 'sha256',
+      sha384: 'sha384',
+      sha512: 'sha512'
+    };
+  }
+
+  /**
    * Generate prime number
    * @param {Number} bits bit length
    */
@@ -45,9 +58,13 @@ class Utils {
    * @param {String} password Password
    * @param {String} algorithm Algorithm
    */
-  static fromPassword(value, md = 'md5') {
-    const d = crypto.createHash(md).update(value).digest('hex');
-    return bigInt(parseInt(d.substr(0, 8), 16));
+  static fromPassword(value, algorithm = 'md5') {
+    if (!Utils.SUPPORTED_ALGORITHMS[algorithm]) {
+      const supported = Object.keys(Utils.SUPPORTED_ALGORITHMS).toString();
+      throw new Error(`Unsuported algorithm ${algorithm}. Supported message digest algorithms are: ${supported}`);
+    }
+    const d = crypto.createHash(algorithm).update(value);
+    return bigInt(parseInt(d.digest('hex').substr(0, 8), 16));
   }
 
   /**
@@ -68,11 +85,12 @@ class Utils {
    * Generate agreement values
    * @param {Number} bits Length
    */
-  static async generateAgreementValues(bits) {
+  static async generateAgreementValues(bits, generator) {
+    if (generator < 2) throw new Error('Invalid generator');
     return new Promise((resolve) => {
       resolve({
         prime: Utils.getPrime(bits).toString(),
-        generator: 2
+        generator
       });
     });
   }

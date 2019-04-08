@@ -6,25 +6,22 @@ describe('Client test', () => {
   it('Should succeed to set valid agreement', async () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
-      const client = new Client();
-      let success;
+      let err;
       try {
-        client.setAgreement(agreement);
-        success = true;
+        client = new Client(agreement);
       } catch (e) {
-        success = false;
+        err = e;
       }
-      assert(success, `Expected to succeed with valid ${bitLength}bit agreement`);
+      assert(err, `Expected to succeed with valid ${bitLength}-bit agreement`);
     });
   });
 
   it('Should throw error when try to set agreement with bit length lesser than 128 bit', async () => {
     const bitLength = 64;
     Agreement.generateAgreement(bitLength).then((agreement) => {
-      const client = new Client();
       let error;
       try {
-        client.setAgreement(agreement);
+        const client = new Client(agreement);
       } catch (e) {
         error = e;
       }
@@ -36,10 +33,9 @@ describe('Client test', () => {
     const bitLength = 256;
     Agreement.generateAgreement(bitLength).then((agreement) => {
       agreement.prime = agreement.prime.minus(1);
-      const client = new Client();
       let error;
       try {
-        client.setAgreement(agreement);
+        const client = new Client(agreement);
       } catch (e) {
         error = e;
       }
@@ -47,37 +43,28 @@ describe('Client test', () => {
     });
   });
 
-  it('Should throw error during calculation of secret value where agreement is required but not provided previously', () => {
-    const client = new Client();
+  it('Should throw error in initialization phase where agreement is required but not provided', () => {
     let error;
     try {
-      client.getSecret('password');
+      const client = new Client();
     } catch (e) {
       error = e;
     }
     assert(error, 'Expected error');
   });
 
-  it('Should throw error during calculation of claim where agreement is required but not provided previously', () => {
-    const client = new Client();
-    let error;
-    try {
-      client.getClaim();
-    } catch (e) {
-      error = e;
-    }
-    assert(error, 'Expected error');
-  });
-
-  it('Should throw error when try to get a proof but verification process was not initialized first', () => {
-    const client = new Client();
-    let error;
-    try {
-      client.getProof('proofRequest', 'password');
-    } catch (e) {
-      error = e;
-    }
-    assert(error, 'Expected error');
+  it('Should throw error when try to get a proof but verification process was not initialized first', async () => {
+    const bitLength = 128;
+    Agreement.generateAgreement(bitLength).then((agreement) => {
+      const client = new Client(agreement);
+      let error;
+      try {
+        client.getProof('proofRequest', 'password');
+      } catch (e) {
+        error = e;
+      }
+      assert(error, 'Expected error');
+    });
   });
 
   it('Should calculate secret with valid size in the case of valid agreement', async () => {
@@ -119,6 +106,36 @@ describe('Client test', () => {
         Math.round((proofToBig.bitLength() / agreement.bitLength) / (8 * agreement.strength)) === 1,
         `Invalid ${proofToBig.bitLength()}-bit proof`
       );
+    });
+  });
+
+  it('Should throw the error when calculating secret in the case of unsupported algorithm', async () => {
+    const bitLength = 256;
+    Agreement.generateAgreement(bitLength).then((agreement) => {
+      const client = new Client(agreement);
+      const alg = 'sha512/224';
+      let err;
+      try {
+        const secret = client.getSecret('password', alg)
+      } catch (e) {
+        err = e;
+      }
+      assert(err, `Error expected with ${alg}`);
+    });
+  });
+
+  it('Should throw the error when calculating proof in the case of unsupported algorithm', async () => {
+    const bitLength = 256;
+    Agreement.generateAgreement(bitLength).then((agreement) => {
+      const client = new Client(agreement);
+      const alg = 'sha512/256';
+      let err;
+      try {
+        const proof = client.getProof('1', 'password', alg);
+      } catch (e) {
+        err = e;
+      }
+      assert(err, `Error expected with ${alg}`);
     });
   });
 });
