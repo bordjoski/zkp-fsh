@@ -30,7 +30,7 @@
   "dependencies": {
     "babel-polyfill": "6.26.0",
     "big-integer": "^1.6.43",
-    "node-forge": "^0.8.2"
+    "node-forge": "^0.10.0"
   },
   "repository": {
     "type": "git",
